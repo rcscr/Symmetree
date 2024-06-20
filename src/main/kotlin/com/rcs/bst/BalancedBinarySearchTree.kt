@@ -55,9 +55,8 @@ class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
                     node.left = BstNode(key, value, null, null, node)
                     NewInsertAndPreviousValue(node.left!!, null)
                 }
-                else -> {
+                else ->
                     insertRecursively(key, value, node.left!!)
-                }
             }
             0 -> {
                 val previousValue = node.value
@@ -69,9 +68,8 @@ class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
                     node.right = BstNode(key, value, null, null, node)
                     NewInsertAndPreviousValue(node.right!!, null)
                 }
-                else -> {
+                else ->
                     insertRecursively(key, value, node.right!!)
-                }
             }
             else -> throw AssertionError()
         }
