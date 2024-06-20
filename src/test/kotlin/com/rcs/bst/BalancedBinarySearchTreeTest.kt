@@ -53,6 +53,21 @@ class BalancedBinarySearchTreeTest {
     }
 
     @Test
+    fun `test get recursive`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, String>()
+        bst.add(0, "zero")
+        bst.add(-1, "minus one")
+        bst.add(1, "one")
+
+        // Act
+        val value = bst.get(-1)
+
+        // Assert
+        assertThat(value).isEqualTo("minus one")
+    }
+
+    @Test
     fun `test add left-skewed balances`() {
         // Arrange
         val bst = BalancedBinarySearchTree<Int, String>()
