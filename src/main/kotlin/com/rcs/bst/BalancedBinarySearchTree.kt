@@ -82,9 +82,9 @@ class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
     private fun findRecursively(key: K, node: BstNode<K, V>?): BstNode<K, V>? {
         return node?.let {
             when (key.compareTo(it.key)) {
-                LESS -> findRecursively(key, it.left!!)
+                LESS -> findRecursively(key, it.left)
                 EQUAL -> it
-                GREATER -> findRecursively(key, it.right!!)
+                GREATER -> findRecursively(key, it.right)
                 else -> throw AssertionError()
             }
         }
