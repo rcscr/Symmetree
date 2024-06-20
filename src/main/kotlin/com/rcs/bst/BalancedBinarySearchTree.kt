@@ -76,14 +76,13 @@ class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
     }
 
     private fun findRecursively(key: K, node: BstNode<K, V>?): BstNode<K, V>? {
-        if (node == null) {
-            return null
-        }
-        return when (key.compareTo(node.key)) {
-            -1 -> findRecursively(key, node.left!!)
-            0 -> node
-            1 -> findRecursively(key, node.right!!)
-            else -> throw AssertionError()
+        return node?.let {
+            when (key.compareTo(it.key)) {
+                -1 -> findRecursively(key, it.left!!)
+                0 -> it
+                1 -> findRecursively(key, it.right!!)
+                else -> throw AssertionError()
+            }
         }
     }
 
