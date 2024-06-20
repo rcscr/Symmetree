@@ -147,19 +147,23 @@ class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
     }
 
     private fun findRightSuccessor(node: BstNode<K, V>): BstNode<K, V> {
-        var successor = node.right!!
-        while (successor.left != null) {
-            successor = successor.left!!
-        }
-        return successor
+        return node.right?.let {
+            var successor = it
+            while (successor.left != null) {
+                successor = successor.left!!
+            }
+            successor
+        } ?: node
     }
 
     private fun findLeftSuccessor(node: BstNode<K, V>): BstNode<K, V> {
-        var successor = node.left!!
-        while (successor.right != null) {
-            successor = successor.right!!
-        }
-        return successor
+        return node.left?.let {
+            var successor = it
+            while (successor.right != null) {
+                successor = successor.right!!
+            }
+            successor
+        } ?: node
     }
 
     private fun rebalance(node: BstNode<K, V>): BstNode<K, V> {
@@ -170,16 +174,18 @@ class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
 
         return when {
             difference < -1 -> {
-                if (node.right != null
-                    && (node.right!!.left?.height() ?: 0) > (node.right!!.right?.height() ?: 0)) {
-                    node.right = rotateRight(node.right!!)
+                node.right?.let {
+                    if ((it.left?.height() ?: 0) > (it.right?.height() ?: 0)) {
+                        node.right = rotateRight(node.right!!)
+                    }
                 }
                 rebalance(rotateLeft(node))
             }
             difference > 1 -> {
-                if (node.left != null
-                    && (node.left!!.right?.height() ?: 0) > (node.left!!.left?.height() ?: 0)) {
-                    node.left = rotateLeft(node.left!!)
+                node.left?.let {
+                    if ((it.right?.height() ?: 0) > (it.left?.height() ?: 0)) {
+                        node.left = rotateLeft(node.left!!)
+                    }
                 }
                 rebalance(rotateRight(node))
             }
@@ -191,26 +197,55 @@ class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
     }
 
     private fun rotateRight(node: BstNode<K, V>): BstNode<K, V> {
-        node.left?.let {
-            it.right = node
-            it.parent = node.parent
+        // new root
+        val leftChild = node.left!!
+
+        node.left = leftChild.right
+        if (leftChild.right != null) {
+            leftChild.right!!.parent = node
         }
-        node.parent = node.left
-        val newRoot = node.left!!
-        node.left = null
-        return newRoot
+
+        leftChild.right = node
+        leftChild.parent = node.parent
+
+        if (node.parent != null) {
+            if (node.parent!!.left == node) {
+                node.parent!!.left = leftChild
+            } else {
+                node.parent!!.right = leftChild
+            }
+        }
+
+        node.parent = leftChild
+
+        return leftChild
     }
 
     private fun rotateLeft(node: BstNode<K, V>): BstNode<K, V> {
-        node.right?.let {
-            it.left = node
-            it.parent = node.parent
+        // new root
+        val rightChild = node.right!!
+
+        node.right = rightChild.left
+        if (rightChild.left != null) {
+            rightChild.left!!.parent = node
         }
-        node.parent = node.right
-        val newRoot = node.right!!
-        node.right = null
-        return newRoot
+
+        rightChild.left = node
+        rightChild.parent = node.parent
+
+        if (node.parent != null) {
+            if (node.parent!!.left == node) {
+                node.parent!!.left = rightChild
+            } else {
+                node.parent!!.right = rightChild
+            }
+        }
+
+        node.parent = rightChild
+
+        return rightChild
     }
+
 
     private data class NewRootAndPreviousValue<K, V>(
         val root: BstNode<K, V>?,

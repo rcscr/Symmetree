@@ -2,6 +2,10 @@ package com.rcs.bst
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.log2
+import kotlin.random.Random
 
 class BalancedBinarySearchTreeTest {
 
@@ -110,6 +114,48 @@ class BalancedBinarySearchTreeTest {
         assertThat(bst.root!!.key).isEqualTo(0)
         assertThat(bst.root!!.right).isNull()
         assertThat(bst.root!!.left!!.key).isEqualTo(-1)
+    }
+
+    @Test
+    fun `test remove leaf with left node`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, String>()
+        bst.add(0, "zero")
+        bst.add(-1, "minus one")
+        bst.add(1, "one")
+        bst.add(-2, "minus two")
+
+        // Act
+        bst.remove(-1)
+
+        // Assert
+        assertThat(bst.height).isEqualTo(2)
+        assertThat(bst.contains(-1)).isFalse()
+        assertThat(bst.get(-1)).isNull()
+        assertThat(bst.root!!.key).isEqualTo(0)
+        assertThat(bst.root!!.left!!.key).isEqualTo(-2)
+        assertThat(bst.root!!.right!!.key).isEqualTo(1)
+    }
+
+    @Test
+    fun `test remove leaf with right node`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, String>()
+        bst.add(0, "zero")
+        bst.add(-1, "minus one")
+        bst.add(1, "one")
+        bst.add(2, "two")
+
+        // Act
+        bst.remove(1)
+
+        // Assert
+        assertThat(bst.height).isEqualTo(2)
+        assertThat(bst.contains(1)).isFalse()
+        assertThat(bst.get(1)).isNull()
+        assertThat(bst.root!!.key).isEqualTo(0)
+        assertThat(bst.root!!.left!!.key).isEqualTo(-1)
+        assertThat(bst.root!!.right!!.key).isEqualTo(2)
     }
 
     @Test
@@ -237,5 +283,38 @@ class BalancedBinarySearchTreeTest {
         assertThat(bst.root!!.right!!.parent).isEqualTo(bst.root)
         assertThat(bst.root!!.right!!.left).isNull()
         assertThat(bst.root!!.right!!.right).isNull()
+    }
+
+    @Test
+    fun `stress test balancing maintains correct height`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, Unit>()
+
+        val numberOfNodes = 10_000
+
+        val values = (0..numberOfNodes).map { Random.nextInt() }
+
+        values.forEach { _ ->
+            bst.add(Random.nextInt(), Unit)
+        }
+
+        // Act
+        val height = bst.height
+
+        // Assert
+        fun minHeightOfBalancedBinaryTree(n: Int): Int {
+            return ceil(log2(n + 1.0)).toInt()
+        }
+
+        fun maxHeightOfBalancedBinaryTree(n: Int): Int {
+            return floor(1.44 * log2(n + 2.0)-0.328).toInt()
+        }
+
+        assertThat(height).isBetween(
+            minHeightOfBalancedBinaryTree(numberOfNodes),
+            maxHeightOfBalancedBinaryTree(numberOfNodes))
+
+        // todo: assert tree contains all numbers in 'values'
+        // need to implement an iterator for this
     }
 }
