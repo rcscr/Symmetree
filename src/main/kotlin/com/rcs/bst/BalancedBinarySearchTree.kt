@@ -4,6 +4,10 @@ import org.example.com.rcs.bst.BstNode
 
 class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
 
+    private val LESS = -1
+    private val EQUAL = 0
+    private val GREATER = 1
+
     internal var root: BstNode<K, V>? = null
 
     val height: Int get() = root?.height() ?: 0
@@ -50,7 +54,7 @@ class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
 
     private fun insertRecursively(key: K, value: V, node: BstNode<K, V>): NewInsertAndPreviousValue<K, V> {
         return when (key.compareTo(node.key)) {
-            -1 -> when (node.left) {
+            LESS -> when (node.left) {
                 null -> {
                     node.left = BstNode(key, value, null, null, node)
                     NewInsertAndPreviousValue(node.left!!, null)
@@ -58,12 +62,12 @@ class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
                 else ->
                     insertRecursively(key, value, node.left!!)
             }
-            0 -> {
+            EQUAL -> {
                 val previousValue = node.value
                 node.value = value
                 NewInsertAndPreviousValue(node, previousValue)
             }
-            1 -> when (node.right) {
+            GREATER -> when (node.right) {
                 null -> {
                     node.right = BstNode(key, value, null, null, node)
                     NewInsertAndPreviousValue(node.right!!, null)
@@ -78,9 +82,9 @@ class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
     private fun findRecursively(key: K, node: BstNode<K, V>?): BstNode<K, V>? {
         return node?.let {
             when (key.compareTo(it.key)) {
-                -1 -> findRecursively(key, it.left!!)
-                0 -> it
-                1 -> findRecursively(key, it.right!!)
+                LESS -> findRecursively(key, it.left!!)
+                EQUAL -> it
+                GREATER -> findRecursively(key, it.right!!)
                 else -> throw AssertionError()
             }
         }
@@ -89,9 +93,9 @@ class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
     private fun remove(key: K, node: BstNode<K, V>?): NewRootAndPreviousValue<K, V>? {
         return node?.let {
             when (key.compareTo(it.key)) {
-                -1 -> remove(key, it.left)
-                0 -> NewRootAndPreviousValue(unlink(it)?.let { rebalance(it) }, it.value)
-                1 -> remove(key, it.right)
+                LESS -> remove(key, it.left)
+                EQUAL -> NewRootAndPreviousValue(unlink(it)?.let { rebalance(it) }, it.value)
+                GREATER -> remove(key, it.right)
                 else -> throw AssertionError()
             }
         }
@@ -182,7 +186,7 @@ class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
             node.parent != null ->
                 rebalance(node.parent!!)
             else ->
-                 node
+                node
         }
     }
 
