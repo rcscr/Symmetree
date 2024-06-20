@@ -53,6 +53,66 @@ class BalancedBinarySearchTreeTest {
     }
 
     @Test
+    fun `test remove root`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, String>()
+        bst.add(0, "zero")
+        bst.add(-1, "minus one")
+        bst.add(1, "one")
+
+        // Act
+        bst.remove(0)
+
+        // Assert
+        assertThat(bst.height).isEqualTo(2)
+        assertThat(bst.contains(0)).isFalse()
+        assertThat(bst.get(0)).isNull()
+        assertThat(bst.root!!.key).isEqualTo(-1)
+        assertThat(bst.root!!.left).isNull()
+        assertThat(bst.root!!.right!!.key).isEqualTo(1)
+    }
+
+    @Test
+    fun `test remove left leaf`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, String>()
+        bst.add(0, "zero")
+        bst.add(-1, "minus one")
+        bst.add(1, "one")
+
+        // Act
+        bst.remove(-1)
+
+        // Assert
+        assertThat(bst.height).isEqualTo(2)
+        assertThat(bst.contains(-1)).isFalse()
+        assertThat(bst.get(-1)).isNull()
+        assertThat(bst.root!!.key).isEqualTo(0)
+        assertThat(bst.root!!.left).isNull()
+        assertThat(bst.root!!.right!!.key).isEqualTo(1)
+    }
+
+    @Test
+    fun `test remove right leaf`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, String>()
+        bst.add(0, "zero")
+        bst.add(-1, "minus one")
+        bst.add(1, "one")
+
+        // Act
+        bst.remove(1)
+
+        // Assert
+        assertThat(bst.height).isEqualTo(2)
+        assertThat(bst.contains(1)).isFalse()
+        assertThat(bst.get(1)).isNull()
+        assertThat(bst.root!!.key).isEqualTo(0)
+        assertThat(bst.root!!.right).isNull()
+        assertThat(bst.root!!.left!!.key).isEqualTo(-1)
+    }
+
+    @Test
     fun `test get recursive`() {
         // Arrange
         val bst = BalancedBinarySearchTree<Int, String>()
