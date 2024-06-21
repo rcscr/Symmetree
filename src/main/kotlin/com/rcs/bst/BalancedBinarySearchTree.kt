@@ -20,8 +20,15 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
         return findRecursively(key, root)?.value
     }
 
+    /**
+     * Default iterator: IntOrder
+     */
     override fun iterator(): Iterator<BstEntry<K, V>> {
         return InOrderBstIterator(root)
+    }
+
+    fun preOrderIterator(): Iterator<BstEntry<K, V>> {
+        return PreOrderBstIterator(root)
     }
 
     /**
