@@ -21,7 +21,7 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
     }
 
     /**
-     * Default iterator: IntOrder
+     * Default iterator: InOrder
      */
     override fun iterator(): Iterator<BstEntry<K, V>> {
         return InOrderBstIterator(root)
