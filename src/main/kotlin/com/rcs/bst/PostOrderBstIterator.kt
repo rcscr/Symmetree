@@ -4,7 +4,7 @@ import org.example.com.rcs.bst.BstNode
 
 class PostOrderBstIterator<K, V>(root: BstNode<K, V>?): Iterator<BstEntry<K, V>> {
 
-    private var next = leftMost(root)
+    private var next = BstUtils.leftMost(root)
 
     override fun hasNext(): Boolean {
         return next != null
@@ -23,10 +23,10 @@ class PostOrderBstIterator<K, V>(root: BstNode<K, V>?): Iterator<BstEntry<K, V>>
                 val isLeftSubtree = next!!.parent!!.left == next
                 var parentsRight = next!!.parent!!.right
                 if (isLeftSubtree && parentsRight != null) {
-                    var newNext = leftMost(parentsRight)
+                    var newNext = BstUtils.leftMost(parentsRight)
                     while (newNext == parentsRight && parentsRight!!.right != null) {
                         parentsRight = parentsRight.right
-                        newNext = leftMost(parentsRight)
+                        newNext = BstUtils.leftMost(parentsRight)
                     }
                     newNext
                 } else {
@@ -34,13 +34,5 @@ class PostOrderBstIterator<K, V>(root: BstNode<K, V>?): Iterator<BstEntry<K, V>>
                 }
             }
         }
-    }
-
-    private fun leftMost(root: BstNode<K, V>?): BstNode<K, V>? {
-        var leftMost = root
-        while (leftMost?.left != null) {
-            leftMost = leftMost.left!!
-        }
-        return leftMost
     }
 }

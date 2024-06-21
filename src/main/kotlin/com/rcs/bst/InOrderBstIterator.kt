@@ -11,14 +11,6 @@ class InOrderBstIterator<K, V>(start: BstNode<K, V>?): Iterator<BstEntry<K, V>> 
             it.next = start
             return it
         }
-
-        private fun <K, V> leftMost(root: BstNode<K, V>?): BstNode<K, V>? {
-            var leftMost = root
-            while (leftMost?.left != null) {
-                leftMost = leftMost.left!!
-            }
-            return leftMost
-        }
     }
 
     internal var next = start
@@ -35,7 +27,7 @@ class InOrderBstIterator<K, V>(start: BstNode<K, V>?): Iterator<BstEntry<K, V>> 
 
     private fun setNext() {
         if (next?.right != null) {
-            next = leftMost(next?.right)
+            next = BstUtils.leftMost(next?.right)
         } else {
             while (next?.parent != null && next == next?.parent?.right) {
                 next = next?.parent
