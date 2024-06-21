@@ -295,7 +295,7 @@ class BalancedBinarySearchTreeTest {
         val values = (0..<numberOfNodes).map { Random.nextInt() }
 
         values.forEach { _ ->
-            bst.add(Random.nextInt(), Unit)
+            bst.add(Random.nextInt(numberOfNodes), Unit)
         }
 
         // Act
