@@ -341,6 +341,38 @@ class BalancedBinarySearchTreeTest {
     }
 
     @Test
+    fun `test PostOrder iterator`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, Unit>()
+
+        //        10
+        //       /  \
+        //      5    15
+        //     / \   / \
+        //    4   6 14  16
+        //   /           \
+        //  3             17
+        bst.add(10, Unit)
+        bst.add(5, Unit)
+        bst.add(15, Unit)
+        bst.add(6, Unit)
+        bst.add(14, Unit)
+        bst.add(4, Unit)
+        bst.add(16, Unit)
+        bst.add(3, Unit)
+        bst.add(17, Unit)
+
+        // Act
+        val iterated = mutableListOf<BstEntry<Int, Unit>>()
+        for (entry in bst.postOrderIterator()) {
+            iterated.add(entry)
+        }
+
+        // Assert
+        assertThat(iterated.map { it.key }).containsExactly(3, 4, 6, 5, 14, 17, 16, 15, 10)
+    }
+
+    @Test
     fun `stress test balancing maintains correct height`() {
         // Arrange
         val bst = BalancedBinarySearchTree<Int, Unit>()
