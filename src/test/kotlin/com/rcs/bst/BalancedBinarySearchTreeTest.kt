@@ -311,24 +311,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test PreOrder iterator`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, Unit>()
-
-        //        10
-        //       /  \
-        //      5    15
-        //     / \   / \
-        //    4   6 14  16
-        //   /           \
-        //  3             17
-        bst.add(10, Unit)
-        bst.add(5, Unit)
-        bst.add(15, Unit)
-        bst.add(6, Unit)
-        bst.add(14, Unit)
-        bst.add(4, Unit)
-        bst.add(16, Unit)
-        bst.add(3, Unit)
-        bst.add(17, Unit)
+        val bst = commonTree()
 
         // Act
         val iterated = mutableListOf<BstEntry<Int, Unit>>()
@@ -343,24 +326,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test PostOrder iterator`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, Unit>()
-
-        //        10
-        //       /  \
-        //      5    15
-        //     / \   / \
-        //    4   6 14  16
-        //   /           \
-        //  3             17
-        bst.add(10, Unit)
-        bst.add(5, Unit)
-        bst.add(15, Unit)
-        bst.add(6, Unit)
-        bst.add(14, Unit)
-        bst.add(4, Unit)
-        bst.add(16, Unit)
-        bst.add(3, Unit)
-        bst.add(17, Unit)
+        val bst = commonTree()
 
         // Act
         val iterated = mutableListOf<BstEntry<Int, Unit>>()
@@ -370,6 +336,18 @@ class BalancedBinarySearchTreeTest {
 
         // Assert
         assertThat(iterated.map { it.key }).containsExactly(3, 4, 6, 5, 14, 17, 16, 15, 10)
+    }
+
+    @Test
+    fun `test range query`() {
+        // Arrange
+        val bst = commonTree()
+
+        // Act
+        val result = bst.rangeQuery(5, 16)
+
+        // Assert
+        assertThat(result.map { it.key }).containsExactly(5, 6, 10, 14, 15)
     }
 
     @Test
@@ -409,5 +387,28 @@ class BalancedBinarySearchTreeTest {
             }
         }
         return true
+    }
+
+    private fun commonTree(): BalancedBinarySearchTree<Int, Unit> {
+        val bst = BalancedBinarySearchTree<Int, Unit>()
+
+        //        10
+        //       /  \
+        //      5    15
+        //     / \   / \
+        //    4   6 14  16
+        //   /           \
+        //  3             17
+        bst.add(10, Unit)
+        bst.add(5, Unit)
+        bst.add(15, Unit)
+        bst.add(6, Unit)
+        bst.add(14, Unit)
+        bst.add(4, Unit)
+        bst.add(16, Unit)
+        bst.add(3, Unit)
+        bst.add(17, Unit)
+
+        return bst
     }
 }

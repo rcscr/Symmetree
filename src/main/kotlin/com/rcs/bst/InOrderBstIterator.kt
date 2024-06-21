@@ -2,9 +2,24 @@ package com.rcs.bst
 
 import org.example.com.rcs.bst.BstNode
 
-class InOrderBstIterator<K, V>(root: BstNode<K, V>?): Iterator<BstEntry<K, V>> {
+class InOrderBstIterator<K, V>(start: BstNode<K, V>?): Iterator<BstEntry<K, V>> {
 
-    private var next = leftMost(root)
+    companion object {
+
+        fun <K, V> fromRoot(root: BstNode<K, V>?): InOrderBstIterator<K, V> {
+            return InOrderBstIterator(leftMost(root))
+        }
+
+        private fun <K, V> leftMost(root: BstNode<K, V>?): BstNode<K, V>? {
+            var leftMost = root
+            while (leftMost?.left != null) {
+                leftMost = leftMost.left!!
+            }
+            return leftMost
+        }
+    }
+
+    private var next = start
 
     override fun hasNext(): Boolean {
         return next != null
@@ -25,13 +40,5 @@ class InOrderBstIterator<K, V>(root: BstNode<K, V>?): Iterator<BstEntry<K, V>> {
             }
             next = next?.parent
         }
-    }
-
-    private fun leftMost(root: BstNode<K, V>?): BstNode<K, V>? {
-        var leftMost = root
-        while (leftMost?.left != null) {
-            leftMost = leftMost.left!!
-        }
-        return leftMost
     }
 }

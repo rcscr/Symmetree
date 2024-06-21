@@ -20,11 +20,19 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
         return findRecursively(key, root)?.value
     }
 
+    fun rangeQuery(fromInclusive: K, toExclusive: K): List<BstEntry<K, V>> {
+        val start = findStart(fromInclusive, root)
+        return InOrderBstIterator(start)
+            .asSequence()
+            .takeWhile { it.key < toExclusive }
+            .toList()
+    }
+
     /**
      * Default iterator: InOrder
      */
     override fun iterator(): Iterator<BstEntry<K, V>> {
-        return InOrderBstIterator(root)
+        return InOrderBstIterator.fromRoot(root)
     }
 
     fun preOrderIterator(): Iterator<BstEntry<K, V>> {
@@ -259,6 +267,29 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
         node.parent = rightChild
 
         return rightChild
+    }
+
+    private fun findStart(startInclusive: K, node: BstNode<K, V>?): BstNode<K, V>? {
+        return node?.let {
+            when (startInclusive.compareTo(it.key)) {
+                LESS -> {
+                    if (it.left == null || it.left!!.key > startInclusive) {
+                        it
+                    } else {
+                        findRecursively(startInclusive, it.left)
+                    }
+                }
+                EQUAL -> it
+                GREATER -> {
+                    if (it.right == null || it.right!!.key > startInclusive) {
+                        it
+                    } else {
+                        findRecursively(startInclusive, it.right)
+                    }
+                }
+                else -> throw AssertionError()
+            }
+        }
     }
 
 
