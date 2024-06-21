@@ -294,8 +294,8 @@ class BalancedBinarySearchTreeTest {
 
         val values = (0..<numberOfNodes).map { Random.nextInt() }
 
-        values.forEach { _ ->
-            bst.add(Random.nextInt(numberOfNodes), Unit)
+        values.forEach {
+            bst.add(it, Unit)
         }
 
         // Act
@@ -403,13 +403,11 @@ class BalancedBinarySearchTreeTest {
     }
 
     private fun isInAscendingOrder(iterated: List<BstEntry<Int, Unit>>): Boolean {
-        return iterated
-            .filterIndexed { index, _ ->
-                when (index) {
-                    iterated.size - 1 -> false
-                    else -> iterated[index].key > iterated[index + 1].key
-                }
+        for (index in 0..<iterated.size-1) {
+            if (iterated[index].key > iterated[index + 1].key) {
+                return false
             }
-            .isEmpty()
+        }
+        return true
     }
 }
