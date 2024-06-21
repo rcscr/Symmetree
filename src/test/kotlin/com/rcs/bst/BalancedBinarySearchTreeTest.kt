@@ -286,13 +286,36 @@ class BalancedBinarySearchTreeTest {
     }
 
     @Test
+    fun `test default (InOrder) iterator`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, Unit>()
+
+        val numberOfNodes = 1_000
+
+        val values = (0..<numberOfNodes).map { Random.nextInt() }
+
+        values.forEach { _ ->
+            bst.add(Random.nextInt(), Unit)
+        }
+
+        // Act
+        val iterated = mutableListOf<BstEntry<Int, Unit>>()
+        for (entry in bst) {
+            iterated.add(entry)
+        }
+
+        // Assert
+        assertThat(isInAscendingOrder(iterated)).isTrue()
+    }
+
+    @Test
     fun `stress test balancing maintains correct height`() {
         // Arrange
         val bst = BalancedBinarySearchTree<Int, Unit>()
 
         val numberOfNodes = 10_000
 
-        val values = (0..numberOfNodes).map { Random.nextInt() }
+        val values = (0..<numberOfNodes).map { Random.nextInt() }
 
         values.forEach { _ ->
             bst.add(Random.nextInt(), Unit)
@@ -313,8 +336,16 @@ class BalancedBinarySearchTreeTest {
         assertThat(height).isBetween(
             minHeightOfBalancedBinaryTree(numberOfNodes),
             maxHeightOfBalancedBinaryTree(numberOfNodes))
+    }
 
-        // todo: assert tree contains all numbers in 'values'
-        // need to implement an iterator for this
+    private fun isInAscendingOrder(iterated: List<BstEntry<Int, Unit>>): Boolean {
+        return iterated
+            .filterIndexed { index, _ ->
+                when (index) {
+                    iterated.size - 1 -> false
+                    else -> iterated[index].key > iterated[index + 1].key
+                }
+            }
+            .isEmpty()
     }
 }

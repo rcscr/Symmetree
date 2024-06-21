@@ -2,7 +2,7 @@ package com.rcs.bst
 
 import org.example.com.rcs.bst.BstNode
 
-class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
+class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparable<K> {
 
     private val LESS = -1
     private val EQUAL = 0
@@ -18,6 +18,10 @@ class BalancedBinarySearchTree<K, V> where K: Comparable<K> {
 
     fun get(key: K): V? {
         return findRecursively(key, root)?.value
+    }
+
+    override fun iterator(): Iterator<BstEntry<K, V>> {
+        return InOrderBstIterator(root)
     }
 
     /**
