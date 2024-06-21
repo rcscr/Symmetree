@@ -22,7 +22,7 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
 
     fun rangeQuery(fromInclusive: K, toExclusive: K): List<BstEntry<K, V>> {
         val start = findStart(fromInclusive, root)
-        return InOrderBstIterator(start)
+        return InOrderBstIterator.fromStart(start)
             .asSequence()
             .takeWhile { it.key < toExclusive }
             .toList()
@@ -32,7 +32,7 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
      * Default iterator: InOrder
      */
     override fun iterator(): Iterator<BstEntry<K, V>> {
-        return InOrderBstIterator.fromRoot(root)
+        return InOrderBstIterator(root)
     }
 
     fun preOrderIterator(): Iterator<BstEntry<K, V>> {

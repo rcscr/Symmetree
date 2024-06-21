@@ -6,8 +6,10 @@ class InOrderBstIterator<K, V>(start: BstNode<K, V>?): Iterator<BstEntry<K, V>> 
 
     companion object {
 
-        fun <K, V> fromRoot(root: BstNode<K, V>?): InOrderBstIterator<K, V> {
-            return InOrderBstIterator(leftMost(root))
+        fun <K, V> fromStart(start: BstNode<K, V>?): InOrderBstIterator<K, V> {
+            val it = InOrderBstIterator<K, V>(null)
+            it.next = start
+            return it
         }
 
         private fun <K, V> leftMost(root: BstNode<K, V>?): BstNode<K, V>? {
@@ -19,7 +21,7 @@ class InOrderBstIterator<K, V>(start: BstNode<K, V>?): Iterator<BstEntry<K, V>> 
         }
     }
 
-    private var next = start
+    internal var next = start
 
     override fun hasNext(): Boolean {
         return next != null
