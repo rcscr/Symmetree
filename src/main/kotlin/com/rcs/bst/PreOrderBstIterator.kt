@@ -16,8 +16,12 @@ class PreOrderBstIterator<K, V>(root: BstNode<K, V>?): Iterator<BstEntry<K, V>> 
 
     override fun next(): BstEntry<K, V> {
         val toReturn = queue.removeFirst()
-        toReturn.left?.let { queue.add(it) }
-        toReturn.right?.let { queue.add(it) }
+        setNext(toReturn)
         return BstEntry(toReturn.key, toReturn.value)
+    }
+
+    private fun setNext(previousNext: BstNode<K, V>) {
+        previousNext.left?.let { queue.add(it) }
+        previousNext.right?.let { queue.add(it) }
     }
 }

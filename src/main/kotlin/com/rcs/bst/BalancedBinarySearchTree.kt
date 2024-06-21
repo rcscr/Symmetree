@@ -13,7 +13,7 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
     val height: Int get() = root?.height() ?: 0
 
     fun contains(key: K): Boolean {
-        return findRecursively(key, root) != null
+        return get(key) != null
     }
 
     fun get(key: K): V? {

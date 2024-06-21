@@ -21,18 +21,14 @@ class PostOrderBstIterator<K, V>(root: BstNode<K, V>?): Iterator<BstEntry<K, V>>
             next!!.isRoot() -> null
             else -> {
                 val isLeftSubtree = next!!.parent!!.left == next
-                if (isLeftSubtree) {
-                    var parentsRight = next!!.parent!!.right
-                    if (parentsRight != null) {
-                        var newNext = leftMost(parentsRight)
-                        while (newNext == parentsRight && parentsRight!!.right != null) {
-                            parentsRight = parentsRight.right
-                            newNext = leftMost(parentsRight)
-                        }
-                        newNext
-                    } else {
-                        next!!.parent
+                var parentsRight = next!!.parent!!.right
+                if (isLeftSubtree && parentsRight != null) {
+                    var newNext = leftMost(parentsRight)
+                    while (newNext == parentsRight && parentsRight!!.right != null) {
+                        parentsRight = parentsRight.right
+                        newNext = leftMost(parentsRight)
                     }
+                    newNext
                 } else {
                     next!!.parent
                 }
