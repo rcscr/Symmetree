@@ -276,17 +276,11 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
                     if (it.left == null || it.left!!.key > startInclusive) {
                         it
                     } else {
-                        findRecursively(startInclusive, it.left)
+                        findStart(startInclusive, it.left)
                     }
                 }
                 EQUAL -> it
-                GREATER -> {
-                    if (it.right == null || it.right!!.key > startInclusive) {
-                        it
-                    } else {
-                        findRecursively(startInclusive, it.right)
-                    }
-                }
+                GREATER -> findStart(startInclusive, it.right)
                 else -> throw AssertionError()
             }
         }
