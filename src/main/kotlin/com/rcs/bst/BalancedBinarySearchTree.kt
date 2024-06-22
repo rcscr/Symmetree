@@ -1,12 +1,11 @@
 package com.rcs.bst
 
+import com.rcs.bst.BstUtils.Companion.EQUAL
+import com.rcs.bst.BstUtils.Companion.GREATER
+import com.rcs.bst.BstUtils.Companion.LESS
 import org.example.com.rcs.bst.BstNode
 
 class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparable<K> {
-
-    private val LESS = -1
-    private val EQUAL = 0
-    private val GREATER = 1
 
     internal var root: BstNode<K, V>? = null
 
@@ -21,7 +20,7 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
     }
 
     fun rangeQuery(fromInclusive: K, toExclusive: K): List<BstEntry<K, V>> {
-        val start = findStart(fromInclusive, root)
+        val start = BstUtils.findStart(fromInclusive, root)
         return InOrderBstIterator.fromStart(start)
             .asSequence()
             .takeWhile { it.key < toExclusive }
@@ -268,24 +267,6 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
 
         return rightChild
     }
-
-    private fun findStart(startInclusive: K, node: BstNode<K, V>?): BstNode<K, V>? {
-        return node?.let {
-            when (startInclusive.compareTo(it.key)) {
-                LESS -> {
-                    if (it.left == null || it.left!!.key > startInclusive) {
-                        it
-                    } else {
-                        findStart(startInclusive, it.left)
-                    }
-                }
-                EQUAL -> it
-                GREATER -> findStart(startInclusive, it.right)
-                else -> throw AssertionError()
-            }
-        }
-    }
-
 
     private data class NewRootAndPreviousValue<K, V>(
         val root: BstNode<K, V>?,
