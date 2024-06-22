@@ -293,10 +293,7 @@ class BalancedBinarySearchTreeTest {
         val numberOfNodes = 1_000
 
         val values = (0..<numberOfNodes).map { Random.nextInt() }
-
-        values.forEach {
-            bst.add(it, Unit)
-        }
+        values.forEach { bst.add(it, Unit) }
 
         // Act
         val iterated = mutableListOf<BstEntry<Int, Unit>>()
@@ -306,6 +303,7 @@ class BalancedBinarySearchTreeTest {
 
         // Assert
         assertThat(isInAscendingOrder(iterated)).isTrue()
+        assertThat(iterated.map { it.key }).isEqualTo(values.sorted().distinct())
     }
 
     @Test

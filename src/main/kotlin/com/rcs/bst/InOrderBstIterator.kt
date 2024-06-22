@@ -2,7 +2,7 @@ package com.rcs.bst
 
 import org.example.com.rcs.bst.BstNode
 
-class InOrderBstIterator<K, V>(start: BstNode<K, V>?): Iterator<BstEntry<K, V>> {
+class InOrderBstIterator<K, V>(root: BstNode<K, V>?): Iterator<BstEntry<K, V>> {
 
     companion object {
 
@@ -13,7 +13,7 @@ class InOrderBstIterator<K, V>(start: BstNode<K, V>?): Iterator<BstEntry<K, V>> 
         }
     }
 
-    internal var next = start
+    internal var next = BstUtils.leftMost(root)
 
     override fun hasNext(): Boolean {
         return next != null
