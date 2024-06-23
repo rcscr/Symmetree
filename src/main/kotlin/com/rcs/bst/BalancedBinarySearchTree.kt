@@ -47,6 +47,7 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
     /**
      * Returns the previous value, if any, associated with this key
      */
+    @Synchronized
     fun add(key: K, value: V): V? {
         if (root == null) {
             root = BstNode(key, value, null, null, null)
@@ -61,6 +62,7 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
     /**
      * Returns the previous value, if any, associated with this key
      */
+    @Synchronized
     fun remove(key: K): V? {
         return remove(key, root)?.let {
             root = it.root
@@ -118,7 +120,10 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
         return node?.let {
             when (key.compareTo(it.key)) {
                 LESS -> remove(key, it.left)
-                EQUAL -> NewRootAndPreviousValue(unlink(it)?.let { unliked -> rebalance(unliked) }, it.value)
+                EQUAL -> NewRootAndPreviousValue(
+                    unlink(it)?.let { unliked -> rebalance(unliked) },
+                    it.value
+                )
                 GREATER -> remove(key, it.right)
                 else -> throw AssertionError()
             }
@@ -127,57 +132,59 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
 
     private fun unlink(node: BstNode<K, V>): BstNode<K, V>? {
         return when {
-            // Case 1: Node is root and has a left child
-            node.isRoot() && node.left != null -> {
-                val newRoot = predecessor(node)
-                newRoot.parent?.let { it.right?.parent = newRoot }
-                newRoot.parent = null
-                newRoot.left = node.left!!.left
-                newRoot.right = node.right
-                newRoot
-            }
-            // Case 2: Node is root and has a right child
-            node.isRoot() && node.right != null -> {
-                val newRoot = successor(node)
-                newRoot.parent?.let { it.left?.parent = newRoot }
-                newRoot.parent = null
-                newRoot.right = node.right!!.right
-                newRoot.left = node.left
-                newRoot
-            }
-            // Case 3: Node is not root and has a left child
+            // Case 1: Node has a left child
             node.left != null -> {
-                node.parent!!.left = node.left
-                node.right?.let { node.left!!.right = it}
-                root
+                val newRoot = predecessor(node)
+                replace(node, newRoot)
+                newRoot
             }
-            // Case 4: Node is not root and has a right child
+            // Case 2: Node has a right child
             node.right != null -> {
-                node.parent!!.right = node.right
-                node.left?.let { node.right!!.left = it}
-                root
+                val newRoot = successor(node)
+                replace(node, newRoot)
+                newRoot
             }
-            // Case 5: Node is not root and has no children (a leaf node)
+            // Case 3: Node is not root and has no children (a leaf node)
             !node.isRoot() -> {
                 when (node) {
                     node.parent!!.left -> node.parent!!.left = null
                     node.parent!!.right -> node.parent!!.right = null
                 }
-                root
+                node.parent
             }
-            // Case 6: Node is root and has no children
+            // Case 4: Node is root and has no children
             else -> null
         }
+    }
+
+    private fun replace(node: BstNode<K, V>, replacement: BstNode<K, V>) {
+        node.parent?.let {
+            when (node) {
+                node.parent!!.left -> node.parent!!.left = replacement
+                node.parent!!.right -> node.parent!!.right = replacement
+            }
+        }
+        replacement.parent?.let {
+            when (replacement) {
+                replacement.parent!!.left -> replacement.parent!!.left = null
+                replacement.parent!!.right -> replacement.parent!!.right = null
+            }
+        }
+        replacement.parent = node.parent
+        replacement.left = node.left
+        replacement.right = node.right
+        replacement.left?.parent = replacement
+        replacement.right?.parent = replacement
     }
 
     private fun rebalance(node: BstNode<K, V>): BstNode<K, V> {
         val leftHeight = node.left?.height() ?: 0
         val rightHeight = node.right?.height() ?: 0
 
-        val difference = leftHeight - rightHeight
+        val balance = leftHeight - rightHeight
 
         return when {
-            difference < -1 -> {
+            balance < -1 -> {
                 node.right?.let {
                     if ((it.left?.height() ?: 0) > (it.right?.height() ?: 0)) {
                         node.right = rotateRight(node.right!!)
@@ -185,7 +192,7 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
                 }
                 rebalance(rotateLeft(node))
             }
-            difference > 1 -> {
+            balance > 1 -> {
                 node.left?.let {
                     if ((it.right?.height() ?: 0) > (it.left?.height() ?: 0)) {
                         node.left = rotateLeft(node.left!!)

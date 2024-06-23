@@ -2,6 +2,7 @@ package com.rcs.bst
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.util.concurrent.Executors
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.log2
@@ -57,23 +58,36 @@ class BalancedBinarySearchTreeTest {
     }
 
     @Test
-    fun `test remove root`() {
+    fun `test remove root with children`() {
+        // Arrange
+        val bst = commonTree()
+
+        // Act
+        bst.remove(10)
+
+        // Assert
+        assertThat(bst.height).isEqualTo(4)
+        assertThat(bst.contains(10)).isFalse()
+        assertThat(bst.get(10)).isNull()
+        assertThat(bst.root!!.key).isEqualTo(7)
+        assertThat(bst.root!!.left!!.key).isEqualTo(5)
+        assertThat(bst.root!!.right!!.key).isEqualTo(15)
+    }
+
+    @Test
+    fun `test remove root without children`() {
         // Arrange
         val bst = BalancedBinarySearchTree<Int, String>()
         bst.add(0, "zero")
-        bst.add(-1, "minus one")
-        bst.add(1, "one")
 
         // Act
         bst.remove(0)
 
         // Assert
-        assertThat(bst.height).isEqualTo(2)
+        assertThat(bst.height).isEqualTo(0)
         assertThat(bst.contains(0)).isFalse()
         assertThat(bst.get(0)).isNull()
-        assertThat(bst.root!!.key).isEqualTo(-1)
-        assertThat(bst.root!!.left).isNull()
-        assertThat(bst.root!!.right!!.key).isEqualTo(1)
+        assertThat(bst.root).isNull()
     }
 
     @Test
@@ -365,17 +379,70 @@ class BalancedBinarySearchTreeTest {
         val height = bst.height
 
         // Assert
-        fun minHeightOfBalancedBinaryTree(n: Int): Int {
-            return ceil(log2(n + 1.0)).toInt()
-        }
-
-        fun maxHeightOfBalancedBinaryTree(n: Int): Int {
-            return floor(1.44 * log2(n + 2.0)-0.328).toInt()
-        }
-
         assertThat(height).isBetween(
             minHeightOfBalancedBinaryTree(numberOfNodes),
             maxHeightOfBalancedBinaryTree(numberOfNodes))
+    }
+
+    @Test
+    fun `test concurrent adds and removals`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, Unit>()
+
+        val numberOfNodes = 10_000
+
+        val values = (0..<numberOfNodes).map { Random.nextInt(Integer.MIN_VALUE, -1) }
+
+        val executorService = Executors.newFixedThreadPool(8)
+
+        val futures = values.map { executorService.submit { bst.add(it, Unit) } }
+        futures.forEach { it.get() }
+
+        // Act
+        val height = bst.height
+
+        val iterated = mutableListOf<BstEntry<Int, Unit>>()
+        for (entry in bst) {
+            iterated.add(entry)
+        }
+
+        // Assert
+        assertThat(height).isBetween(
+            minHeightOfBalancedBinaryTree(numberOfNodes),
+            maxHeightOfBalancedBinaryTree(numberOfNodes))
+
+        assertThat(isInAscendingOrder(iterated)).isTrue()
+
+        // Act (again) - add new and different values while concurrently removing old ones
+        val newValues = (0..<numberOfNodes).map { Random.nextInt(1, Integer.MAX_VALUE) }
+
+        val addFutures = newValues.map { executorService.submit { bst.add(it, Unit) } }
+        val removeFutures = values.map { executorService.submit { bst.remove(it) } }
+        addFutures.forEach { it.get() }
+        removeFutures.forEach { it.get() }
+
+        val heightAgain = bst.height
+
+        val iteratedAgain = mutableListOf<BstEntry<Int, Unit>>()
+        for (entry in bst) {
+            iteratedAgain.add(entry)
+        }
+
+        // Assert (again)
+        assertThat(heightAgain).isBetween(
+            minHeightOfBalancedBinaryTree(numberOfNodes),
+            maxHeightOfBalancedBinaryTree(numberOfNodes))
+
+        assertThat(isInAscendingOrder(iteratedAgain)).isTrue()
+        assertThat(iteratedAgain.map { it.key }).isEqualTo(newValues.sorted().distinct())
+    }
+
+    private fun minHeightOfBalancedBinaryTree(n: Int): Int {
+        return ceil(log2(n + 1.0)).toInt()
+    }
+
+    private fun maxHeightOfBalancedBinaryTree(n: Int): Int {
+        return floor(1.44 * log2(n + 2.0)-0.328).toInt()
     }
 
     private fun isInAscendingOrder(iterated: List<BstEntry<Int, Unit>>): Boolean {
