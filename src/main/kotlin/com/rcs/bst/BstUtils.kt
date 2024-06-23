@@ -27,15 +27,11 @@ class BstUtils {
         }
 
         fun <K, V> predecessor(node: BstNode<K, V>): BstNode<K, V>? {
-            return node.left?.let {
-                rightMost(it)
-            }
+            return rightMost(node.left)
         }
 
         fun <K, V> successor(node: BstNode<K, V>): BstNode<K, V>? {
-            return node.right?.let {
-                leftMost(it)
-            }
+            return leftMost(node.right)
         }
 
         fun <K: Comparable<K>, V> findStart(startInclusive: K, node: BstNode<K, V>?): BstNode<K, V>? {
