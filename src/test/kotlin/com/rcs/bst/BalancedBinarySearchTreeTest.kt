@@ -70,7 +70,9 @@ class BalancedBinarySearchTreeTest {
         assertThat(bst.contains(10)).isFalse()
         assertThat(bst.get(10)).isNull()
         assertThat(bst.root!!.key).isEqualTo(7)
-        assertThat(bst.root!!.left!!.key).isEqualTo(5)
+        assertThat(bst.root!!.left!!.key).isEqualTo(4)
+        assertThat(bst.root!!.left!!.left!!.key).isEqualTo(3)
+        assertThat(bst.root!!.left!!.right!!.key).isEqualTo(5)
         assertThat(bst.root!!.right!!.key).isEqualTo(15)
     }
 

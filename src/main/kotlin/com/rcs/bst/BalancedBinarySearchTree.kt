@@ -4,6 +4,7 @@ import com.rcs.bst.BstUtils.Companion.EQUAL
 import com.rcs.bst.BstUtils.Companion.GREATER
 import com.rcs.bst.BstUtils.Companion.LESS
 import com.rcs.bst.BstUtils.Companion.predecessor
+import com.rcs.bst.BstUtils.Companion.replace
 import com.rcs.bst.BstUtils.Companion.successor
 import org.example.com.rcs.bst.BstNode
 
@@ -105,7 +106,7 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
         }
     }
 
-    private fun findRecursively(key: K, node: BstNode<K, V>?): BstNode<K, V>? {
+    internal fun findRecursively(key: K, node: BstNode<K, V>?): BstNode<K, V>? {
         return node?.let {
             when (key.compareTo(it.key)) {
                 LESS -> findRecursively(key, it.left)
@@ -134,13 +135,13 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
         return when {
             // Case 1: Node has a left child
             node.left != null -> {
-                val newRoot = predecessor(node)
+                val newRoot = predecessor(node)!!
                 replace(node, newRoot)
                 newRoot
             }
             // Case 2: Node has a right child
             node.right != null -> {
-                val newRoot = successor(node)
+                val newRoot = successor(node)!!
                 replace(node, newRoot)
                 newRoot
             }
@@ -155,26 +156,6 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
             // Case 4: Node is root and has no children
             else -> null
         }
-    }
-
-    private fun replace(node: BstNode<K, V>, replacement: BstNode<K, V>) {
-        node.parent?.let {
-            when (node) {
-                node.parent!!.left -> node.parent!!.left = replacement
-                node.parent!!.right -> node.parent!!.right = replacement
-            }
-        }
-        replacement.parent?.let {
-            when (replacement) {
-                replacement.parent!!.left -> replacement.parent!!.left = null
-                replacement.parent!!.right -> replacement.parent!!.right = null
-            }
-        }
-        replacement.parent = node.parent
-        replacement.left = node.left
-        replacement.right = node.right
-        replacement.left?.parent = replacement
-        replacement.right?.parent = replacement
     }
 
     private fun rebalance(node: BstNode<K, V>): BstNode<K, V> {

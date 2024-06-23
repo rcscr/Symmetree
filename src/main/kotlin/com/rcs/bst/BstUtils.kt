@@ -26,16 +26,16 @@ class BstUtils {
             return rightMost
         }
 
-        fun <K, V> predecessor(node: BstNode<K, V>): BstNode<K, V> {
+        fun <K, V> predecessor(node: BstNode<K, V>): BstNode<K, V>? {
             return node.left?.let {
                 rightMost(it)
-            } ?: node
+            }
         }
 
-        fun <K, V> successor(node: BstNode<K, V>): BstNode<K, V> {
+        fun <K, V> successor(node: BstNode<K, V>): BstNode<K, V>? {
             return node.right?.let {
                 leftMost(it)
-            } ?: node
+            }
         }
 
         fun <K: Comparable<K>, V> findStart(startInclusive: K, node: BstNode<K, V>?): BstNode<K, V>? {
@@ -58,6 +58,19 @@ class BstUtils {
                     }
                     else -> throw AssertionError()
                 }
+            }
+        }
+
+        fun <K, V> replace(node: BstNode<K, V>, replacement: BstNode<K, V>) {
+            node.key = replacement.key
+            node.value = replacement.value
+            if (replacement.isLeaf()) {
+                when (replacement) {
+                    replacement.parent?.left -> replacement.parent!!.left = null
+                    replacement.parent?.right -> replacement.parent!!.right = null
+                }
+            } else {
+                replace(replacement, (predecessor(replacement) ?: successor(replacement))!!)
             }
         }
     }

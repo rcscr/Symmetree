@@ -14,7 +14,7 @@ class BstUtilsTest {
         val predecessor = BstUtils.predecessor(bst.root!!.left!!)
 
         // Assert
-        assertThat(predecessor.key).isEqualTo(4)
+        assertThat(predecessor!!.key).isEqualTo(4)
     }
 
     @Test
@@ -26,7 +26,7 @@ class BstUtilsTest {
         val successor = BstUtils.successor(bst.root!!.right!!)
 
         // Assert
-        assertThat(successor.key).isEqualTo(16)
+        assertThat(successor!!.key).isEqualTo(16)
     }
 
     @Test
@@ -38,7 +38,7 @@ class BstUtilsTest {
         val predecessor = BstUtils.predecessor(bst.root!!)
 
         // Assert
-        assertThat(predecessor.key).isEqualTo(7)
+        assertThat(predecessor!!.key).isEqualTo(7)
     }
 
     @Test
@@ -50,7 +50,7 @@ class BstUtilsTest {
         val successor = BstUtils.successor(bst.root!!)
 
         // Assert
-        assertThat(successor.key).isEqualTo(13)
+        assertThat(successor!!.key).isEqualTo(13)
     }
 
     @Test
@@ -148,6 +148,42 @@ class BstUtilsTest {
 
         // Assert
         assertThat(leftmost!!.key).isEqualTo(7)
+    }
+
+    @Test
+    fun `test replace with leaf node`() {
+        // Arrange
+        val bst = commonTree()
+        val node = bst.findRecursively(5, bst.root)!!
+        val replacement = bst.findRecursively(3, bst.root)!!
+
+        // Act
+        BstUtils.replace(node, replacement)
+
+        // Assert
+        assertThat(bst.root!!.left!!.key).isEqualTo(3)
+        assertThat(bst.root!!.left!!.left!!.key).isEqualTo(4)
+        assertThat(bst.root!!.left!!.right!!.key).isEqualTo(7)
+        assertThat(bst.root!!.left!!.left!!.isLeaf()).isTrue()
+    }
+
+    @Test
+    fun `test replace with non-leaf node`() {
+        // Arrange
+        val bst = commonTree()
+        val node = bst.findRecursively(5, bst.root)!!
+        val replacement = bst.findRecursively(15, bst.root)!!
+
+        // Act
+        BstUtils.replace(node, replacement)
+
+        // Assert
+        assertThat(bst.root!!.left!!.key).isEqualTo(15)
+        assertThat(bst.root!!.left!!.left!!.key).isEqualTo(4)
+        assertThat(bst.root!!.left!!.right!!.key).isEqualTo(7)
+        assertThat(bst.root!!.right!!.key).isEqualTo(13)
+        assertThat(bst.root!!.right!!.left).isNull()
+        assertThat(bst.root!!.right!!.right!!.key).isEqualTo(16)
     }
 
     private fun commonTree(): BalancedBinarySearchTree<Int, Unit> {
