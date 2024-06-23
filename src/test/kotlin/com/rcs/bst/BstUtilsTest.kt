@@ -6,6 +6,54 @@ import org.junit.jupiter.api.Test
 class BstUtilsTest {
 
     @Test
+    fun `test predecessor with no right subtree`() {
+        // Arrange
+        val bst = commonTree()
+
+        // Act
+        val predecessor = BstUtils.predecessor(bst.root!!.left!!)
+
+        // Assert
+        assertThat(predecessor.key).isEqualTo(4)
+    }
+
+    @Test
+    fun `test successor with no left subtree`() {
+        // Arrange
+        val bst = commonTree()
+
+        // Act
+        val successor = BstUtils.successor(bst.root!!.right!!)
+
+        // Assert
+        assertThat(successor.key).isEqualTo(16)
+    }
+
+    @Test
+    fun `test predecessor with right subtree`() {
+        // Arrange
+        val bst = commonTree()
+
+        // Act
+        val predecessor = BstUtils.predecessor(bst.root!!)
+
+        // Assert
+        assertThat(predecessor.key).isEqualTo(7)
+    }
+
+    @Test
+    fun `test successor with left subtree`() {
+        // Arrange
+        val bst = commonTree()
+
+        // Act
+        val successor = BstUtils.successor(bst.root!!)
+
+        // Assert
+        assertThat(successor.key).isEqualTo(13)
+    }
+
+    @Test
     fun `test leftMost with left subtree`() {
         // Arrange
         val bst = commonTree()
@@ -27,6 +75,31 @@ class BstUtilsTest {
 
         // Assert
         assertThat(leftmost!!.key).isEqualTo(7)
+    }
+
+
+    @Test
+    fun `test rightMost with left subtree`() {
+        // Arrange
+        val bst = commonTree()
+
+        // Act
+        val rightMost = BstUtils.rightMost(bst.root)
+
+        // Assert
+        assertThat(rightMost!!.key).isEqualTo(17)
+    }
+
+    @Test
+    fun `test rightMost with no left subtree`() {
+        // Arrange
+        val bst = commonTree()
+
+        // Act
+        val rightMost = BstUtils.leftMost(bst.root!!.right!!.left)
+
+        // Assert
+        assertThat(rightMost!!.key).isEqualTo(13)
     }
 
     @Test

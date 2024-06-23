@@ -3,6 +3,8 @@ package com.rcs.bst
 import com.rcs.bst.BstUtils.Companion.EQUAL
 import com.rcs.bst.BstUtils.Companion.GREATER
 import com.rcs.bst.BstUtils.Companion.LESS
+import com.rcs.bst.BstUtils.Companion.predecessor
+import com.rcs.bst.BstUtils.Companion.successor
 import org.example.com.rcs.bst.BstNode
 
 class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparable<K> {
@@ -116,7 +118,7 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
         return node?.let {
             when (key.compareTo(it.key)) {
                 LESS -> remove(key, it.left)
-                EQUAL -> NewRootAndPreviousValue(unlink(it)?.let { rebalance(it) }, it.value)
+                EQUAL -> NewRootAndPreviousValue(unlink(it)?.let { unliked -> rebalance(unliked) }, it.value)
                 GREATER -> remove(key, it.right)
                 else -> throw AssertionError()
             }
@@ -127,7 +129,7 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
         return when {
             // Case 1: Node is root and has a left child
             node.isRoot() && node.left != null -> {
-                val newRoot = findLeftSuccessor(node)
+                val newRoot = predecessor(node)
                 newRoot.parent?.let { it.right?.parent = newRoot }
                 newRoot.parent = null
                 newRoot.left = node.left!!.left
@@ -136,7 +138,7 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
             }
             // Case 2: Node is root and has a right child
             node.isRoot() && node.right != null -> {
-                val newRoot = findRightSuccessor(node)
+                val newRoot = successor(node)
                 newRoot.parent?.let { it.left?.parent = newRoot }
                 newRoot.parent = null
                 newRoot.right = node.right!!.right
@@ -166,26 +168,6 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
             // Case 6: Node is root and has no children
             else -> null
         }
-    }
-
-    private fun findRightSuccessor(node: BstNode<K, V>): BstNode<K, V> {
-        return node.right?.let {
-            var successor = it
-            while (successor.left != null) {
-                successor = successor.left!!
-            }
-            successor
-        } ?: node
-    }
-
-    private fun findLeftSuccessor(node: BstNode<K, V>): BstNode<K, V> {
-        return node.left?.let {
-            var successor = it
-            while (successor.right != null) {
-                successor = successor.right!!
-            }
-            successor
-        } ?: node
     }
 
     private fun rebalance(node: BstNode<K, V>): BstNode<K, V> {
