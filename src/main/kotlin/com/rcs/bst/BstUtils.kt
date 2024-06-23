@@ -26,15 +26,15 @@ class BstUtils {
             return rightMost
         }
 
-        fun <K, V> successor(node: BstNode<K, V>): BstNode<K, V> {
-            return node.right?.let {
-                leftMost(it)
-            } ?: node
-        }
-
         fun <K, V> predecessor(node: BstNode<K, V>): BstNode<K, V> {
             return node.left?.let {
                 rightMost(it)
+            } ?: node
+        }
+
+        fun <K, V> successor(node: BstNode<K, V>): BstNode<K, V> {
+            return node.right?.let {
+                leftMost(it)
             } ?: node
         }
 
