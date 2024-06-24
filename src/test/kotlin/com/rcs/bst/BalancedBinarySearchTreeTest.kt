@@ -306,9 +306,7 @@ class BalancedBinarySearchTreeTest {
         // Arrange
         val bst = BalancedBinarySearchTree<Int, Unit>()
 
-        val numberOfNodes = 1_000
-
-        val values = (0..<numberOfNodes).map { Random.nextInt() }
+        val values = (0..<1_000).map { Random.nextInt() }
         values.forEach { bst.add(it, Unit) }
 
         // Act
@@ -369,9 +367,7 @@ class BalancedBinarySearchTreeTest {
         // Arrange
         val bst = BalancedBinarySearchTree<Int, Unit>()
 
-        val numberOfNodes = 10_000
-
-        val values = (0..<numberOfNodes).map { Random.nextInt() }
+        val values = (0..<10_000).map { Random.nextInt() }
 
         values.forEach {
             bst.add(it, Unit)
@@ -382,8 +378,8 @@ class BalancedBinarySearchTreeTest {
 
         // Assert
         assertThat(height).isBetween(
-            minHeightOfBalancedBinaryTree(numberOfNodes),
-            maxHeightOfBalancedBinaryTree(numberOfNodes))
+            minHeightOfBalancedBinaryTree(values.size),
+            maxHeightOfBalancedBinaryTree(values.size))
     }
 
     @Test
@@ -391,9 +387,7 @@ class BalancedBinarySearchTreeTest {
         // Arrange
         val bst = BalancedBinarySearchTree<Int, Unit>()
 
-        val numberOfNodes = 10_000
-
-        val values = (0..<numberOfNodes).map { Random.nextInt(Integer.MIN_VALUE, -1) }
+        val values = (0..<10_000).map { Random.nextInt(Integer.MIN_VALUE, -1) }
 
         val executorService = Executors.newFixedThreadPool(8)
 
@@ -410,13 +404,13 @@ class BalancedBinarySearchTreeTest {
 
         // Assert
         assertThat(height).isBetween(
-            minHeightOfBalancedBinaryTree(numberOfNodes),
-            maxHeightOfBalancedBinaryTree(numberOfNodes))
+            minHeightOfBalancedBinaryTree(values.size),
+            maxHeightOfBalancedBinaryTree(values.size))
 
         assertThat(isInAscendingOrder(iterated)).isTrue()
 
         // Act (again) - add new and different values while concurrently removing old ones
-        val newValues = (0..<numberOfNodes).map { Random.nextInt(1, Integer.MAX_VALUE) }
+        val newValues = (0..<10_000).map { Random.nextInt(1, Integer.MAX_VALUE) }
 
         val addFutures = newValues.map { executorService.submit { bst.add(it, Unit) } }
         val removeFutures = values.map { executorService.submit { bst.remove(it) } }
@@ -432,8 +426,8 @@ class BalancedBinarySearchTreeTest {
 
         // Assert (again)
         assertThat(heightAgain).isBetween(
-            minHeightOfBalancedBinaryTree(numberOfNodes),
-            maxHeightOfBalancedBinaryTree(numberOfNodes))
+            minHeightOfBalancedBinaryTree(newValues.size),
+            maxHeightOfBalancedBinaryTree(newValues.size))
 
         assertThat(isInAscendingOrder(iteratedAgain)).isTrue()
         assertThat(iteratedAgain.map { it.key }).isEqualTo(newValues.sorted().distinct())
