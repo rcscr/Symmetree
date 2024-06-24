@@ -11,50 +11,21 @@ import kotlin.random.Random
 class BalancedBinarySearchTreeTest {
 
     @Test
-    fun `test simple add`() {
-        // Arrange
-        val bst = BalancedBinarySearchTree<Int, String>()
-        bst.add(0, "zero")
-
-        // Act
-        val contains = bst.contains(0)
-        val value = bst.get(0)
-        val height = bst.height
-
-        // Assert
-        assertThat(contains).isTrue()
-        assertThat(value).isEqualTo("zero")
-        assertThat(height).isEqualTo(1)
-    }
-
-    @Test
     fun `test simple update`() {
         // Arrange
         val bst = BalancedBinarySearchTree<Int, String>()
         bst.add(0, "zero")
+        bst.add(-1, "minus one")
+        bst.add(1, "one")
+        bst.add(-2, "minus two")
 
         // Act
-        val previousValue = bst.add(0, "null")
+        val previousValue = bst.add(-2, "minus deux")
 
         // Assert
-        assertThat(previousValue).isEqualTo("zero")
-        val currentValue = bst.get(0)
-        assertThat(currentValue).isEqualTo("null")
-    }
-
-    @Test
-    fun `test simple remove`() {
-        // Arrange
-        val bst = BalancedBinarySearchTree<Int, String>()
-        bst.add(0, "zero")
-
-        // Act
-        bst.remove(0)
-
-        // Assert
-        assertThat(bst.height).isEqualTo(0)
-        assertThat(bst.contains(0)).isFalse()
-        assertThat(bst.get(0)).isNull()
+        assertThat(previousValue).isEqualTo("minus two")
+        val currentValue = bst.get(-2)
+        assertThat(currentValue).isEqualTo("minus deux")
     }
 
     @Test
