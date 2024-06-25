@@ -6,9 +6,9 @@ class BstUtils {
 
     companion object {
 
-        val LESS = -1
-        val EQUAL = 0
-        val GREATER = 1
+        const val LESS = -1
+        const val EQUAL = 0
+        const val GREATER = 1
 
         fun <K, V> leftMost(node: BstNode<K, V>?): BstNode<K, V>? {
             var leftMost = node
