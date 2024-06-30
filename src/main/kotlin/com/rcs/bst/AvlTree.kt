@@ -132,7 +132,7 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
             when (key.compareTo(it.key)) {
                 LESS -> remove(key, it.left)
                 EQUAL -> NewRootAndPreviousValue(
-                    unlink(it)?.let { unliked -> rebalance(unliked) },
+                    unlink(it)?.let { unlinked -> rebalance(unlinked) },
                     it.value
                 )
                 GREATER -> remove(key, it.right)
