@@ -292,6 +292,25 @@ class BalancedBinarySearchTreeTest {
     }
 
     @Test
+    fun `test ReverseOrder iterator`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, Unit>()
+
+        val values = (0..<1_000).map { Random.nextInt() }
+        values.forEach { bst.add(it, Unit) }
+
+        // Act
+        val iterated = mutableListOf<BstEntry<Int, Unit>>()
+        for (entry in bst.reverseOrderIterator()) {
+            iterated.add(entry)
+        }
+
+        // Assert
+        assertThat(isInDescendingOrder(iterated)).isTrue()
+        assertThat(iterated.map { it.key }).isEqualTo(values.sorted().reversed().distinct())
+    }
+
+    @Test
     fun `test PreOrder iterator`() {
         // Arrange
         val bst = commonTree()
@@ -415,6 +434,15 @@ class BalancedBinarySearchTreeTest {
     private fun isInAscendingOrder(iterated: List<BstEntry<Int, Unit>>): Boolean {
         for (index in 0..<iterated.size-1) {
             if (iterated[index].key > iterated[index + 1].key) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun isInDescendingOrder(iterated: List<BstEntry<Int, Unit>>): Boolean {
+        for (index in 0..<iterated.size-1) {
+            if (iterated[index].key < iterated[index + 1].key) {
                 return false
             }
         }

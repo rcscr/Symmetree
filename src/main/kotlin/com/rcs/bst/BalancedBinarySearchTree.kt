@@ -45,6 +45,10 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
         return PostOrderBstIterator(root)
     }
 
+    fun reverseOrderIterator(): Iterator<BstEntry<K, V>> {
+        return ReverseOrderBstIterator(root)
+    }
+
     /**
      * Returns the previous value, if any, associated with this key
      */
