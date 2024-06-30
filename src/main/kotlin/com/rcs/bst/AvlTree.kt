@@ -149,12 +149,14 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
                 replace(node, newRoot)
                 newRoot
             }
+
             // Case 2: Node has a right child
             node.right != null -> {
                 val newRoot = successor(node)!!
                 replace(node, newRoot)
                 newRoot
             }
+
             // Case 3: Node is not root and has no children (a leaf node)
             !node.isRoot() -> {
                 when (node) {
@@ -163,6 +165,7 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
                 }
                 node.parent
             }
+
             // Case 4: Node is root and has no children
             else -> null
         }
@@ -175,6 +178,7 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
         val balance = leftHeight - rightHeight
 
         return when {
+            // Subtree is right heavy
             balance < -1 -> {
                 node.right?.let {
                     if ((it.left?.height() ?: 0) > (it.right?.height() ?: 0)) {
@@ -183,6 +187,8 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
                 }
                 rebalance(rotateLeft(node))
             }
+
+            // Subtree is left heavy
             balance > 1 -> {
                 node.left?.let {
                     if ((it.right?.height() ?: 0) > (it.left?.height() ?: 0)) {
@@ -191,8 +197,12 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
                 }
                 rebalance(rotateRight(node))
             }
+
+            // Subtree is balanced; call `rebalance` recursively up to the root
             node.parent != null ->
                 rebalance(node.parent!!)
+
+            // Node is root and tree is balanced - nothing further to do
             else ->
                 node
         }
