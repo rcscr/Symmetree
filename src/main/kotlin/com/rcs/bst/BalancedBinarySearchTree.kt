@@ -12,6 +12,8 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
 
     internal var root: BstNode<K, V>? = null
 
+    internal var modCount = 0
+
     val height: Int get() = root?.height() ?: 0
 
     fun contains(key: K): Boolean {
@@ -24,7 +26,7 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
 
     fun rangeQuery(fromInclusive: K, toExclusive: K): List<BstEntry<K, V>> {
         val start = BstUtils.findStart(fromInclusive, root)
-        return InOrderBstIterator.fromStart(start)
+        return InOrderBstIterator.fromStart(this, start)
             .asSequence()
             .takeWhile { it.key < toExclusive }
             .toList()
@@ -34,19 +36,19 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
      * Default iterator: InOrder
      */
     override fun iterator(): Iterator<BstEntry<K, V>> {
-        return InOrderBstIterator(root)
+        return InOrderBstIterator(this)
     }
 
     fun preOrderIterator(): Iterator<BstEntry<K, V>> {
-        return PreOrderBstIterator(root)
+        return PreOrderBstIterator(this)
     }
 
     fun postOrderIterator(): Iterator<BstEntry<K, V>> {
-        return PostOrderBstIterator(root)
+        return PostOrderBstIterator(this)
     }
 
     fun reverseOrderIterator(): Iterator<BstEntry<K, V>> {
-        return ReverseOrderBstIterator(root)
+        return ReverseOrderBstIterator(this)
     }
 
     /**
@@ -54,6 +56,8 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
      */
     @Synchronized
     fun add(key: K, value: V): V? {
+        modCount++
+
         if (root == null) {
             root = BstNode(key, value, null, null, null)
             return null
@@ -69,6 +73,8 @@ class BalancedBinarySearchTree<K, V>: Iterable<BstEntry<K, V>> where K: Comparab
      */
     @Synchronized
     fun remove(key: K): V? {
+        modCount++
+
         return remove(key, root)?.let {
             root = it.root
             it.previousValue

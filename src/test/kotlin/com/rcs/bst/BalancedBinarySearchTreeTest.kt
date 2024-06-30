@@ -2,6 +2,7 @@ package com.rcs.bst
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.util.concurrent.Executors
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -336,6 +337,70 @@ class BalancedBinarySearchTreeTest {
 
         // Assert
         assertThat(iterated.map { it.key }).containsExactly(3, 4, 7, 5, 14, 17, 16, 15, 10)
+    }
+
+    @Test
+    fun `test default (InOrder) iterator - ConcurrentModificationException`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, Unit>()
+
+        val values = (0..<1_000).map { Random.nextInt() }
+        values.forEach { bst.add(it, Unit) }
+
+        // Act & Assert
+        assertThrows<ConcurrentModificationException> {
+            for (entry in bst) {
+                bst.remove(entry.key)
+            }
+        }
+    }
+
+    @Test
+    fun `test ReverseOrder iterator - ConcurrentModificationException`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, Unit>()
+
+        val values = (0..<1_000).map { Random.nextInt() }
+        values.forEach { bst.add(it, Unit) }
+
+        // Act & Assert
+        assertThrows<ConcurrentModificationException> {
+            for (entry in bst.reverseOrderIterator()) {
+                bst.remove(entry.key)
+            }
+        }
+    }
+
+    @Test
+    fun `test PostOrder iterator - ConcurrentModificationException`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, Unit>()
+
+        val values = (0..<1_000).map { Random.nextInt() }
+        values.forEach { bst.add(it, Unit) }
+
+        // Act & Assert
+        assertThrows<ConcurrentModificationException> {
+            for (entry in bst.postOrderIterator()) {
+                bst.remove(entry.key)
+            }
+        }
+    }
+
+    @Test
+    fun `test PreOrder iterator - ConcurrentModificationException`() {
+        // Arrange
+        val bst = BalancedBinarySearchTree<Int, Unit>()
+
+        val values = (0..<1_000).map { Random.nextInt() }
+        values.forEach { bst.add(it, Unit) }
+
+        // Act & Assert
+        assertThrows<ConcurrentModificationException> {
+            for (entry in bst.postOrderIterator()) {
+                bst.remove(entry.key)
+            }
+        }
     }
 
     @Test

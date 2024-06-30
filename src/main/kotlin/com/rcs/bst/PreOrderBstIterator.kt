@@ -2,12 +2,15 @@ package com.rcs.bst
 
 import org.example.com.rcs.bst.BstNode
 
-class PreOrderBstIterator<K, V>(root: BstNode<K, V>?): Iterator<BstEntry<K, V>> {
+class PreOrderBstIterator<K: Comparable<K>, V>(
+    val bst: BalancedBinarySearchTree<K, V>
+): Iterator<BstEntry<K, V>> {
 
     private val queue = ArrayDeque<BstNode<K, V>>()
+    private val modCount = bst.modCount
 
     init {
-        root?.let { queue.add(it) }
+        bst.root?.let { queue.add(it) }
     }
 
     override fun hasNext(): Boolean {
@@ -15,6 +18,10 @@ class PreOrderBstIterator<K, V>(root: BstNode<K, V>?): Iterator<BstEntry<K, V>> 
     }
 
     override fun next(): BstEntry<K, V> {
+        if (modCount != bst.modCount) {
+            throw ConcurrentModificationException()
+        }
+
         val toReturn = queue.removeFirst()
         setNext(toReturn)
         return BstEntry(toReturn.key, toReturn.value)
