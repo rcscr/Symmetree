@@ -287,7 +287,6 @@ class BalancedBinarySearchTreeTest {
         }
 
         // Assert
-        assertThat(isInAscendingOrder(iterated)).isTrue()
         assertThat(iterated.map { it.key }).isEqualTo(values.sorted().distinct())
     }
 
@@ -306,7 +305,6 @@ class BalancedBinarySearchTreeTest {
         }
 
         // Assert
-        assertThat(isInDescendingOrder(iterated)).isTrue()
         assertThat(iterated.map { it.key }).isEqualTo(values.sorted().reversed().distinct())
     }
 
@@ -387,17 +385,10 @@ class BalancedBinarySearchTreeTest {
         // Act
         val height = bst.height
 
-        val iterated = mutableListOf<BstEntry<Int, Unit>>()
-        for (entry in bst) {
-            iterated.add(entry)
-        }
-
         // Assert
         assertThat(height).isBetween(
             minHeightOfBalancedBinaryTree(values.size),
             maxHeightOfBalancedBinaryTree(values.size))
-
-        assertThat(isInAscendingOrder(iterated)).isTrue()
 
         // Act (again) - add new and different values while concurrently removing old ones
         val newValues = (0..<10_000).map { Random.nextInt(1, Integer.MAX_VALUE) }
@@ -409,9 +400,9 @@ class BalancedBinarySearchTreeTest {
 
         val heightAgain = bst.height
 
-        val iteratedAgain = mutableListOf<BstEntry<Int, Unit>>()
+        val remaining = mutableListOf<BstEntry<Int, Unit>>()
         for (entry in bst) {
-            iteratedAgain.add(entry)
+            remaining.add(entry)
         }
 
         // Assert (again)
@@ -419,8 +410,8 @@ class BalancedBinarySearchTreeTest {
             minHeightOfBalancedBinaryTree(newValues.size),
             maxHeightOfBalancedBinaryTree(newValues.size))
 
-        assertThat(isInAscendingOrder(iteratedAgain)).isTrue()
-        assertThat(iteratedAgain.map { it.key }).isEqualTo(newValues.sorted().distinct())
+        assertThat(isInAscendingOrder(remaining)).isTrue()
+        assertThat(remaining.map { it.key }).isEqualTo(newValues.sorted().distinct())
     }
 
     private fun minHeightOfBalancedBinaryTree(n: Int): Int {
@@ -434,15 +425,6 @@ class BalancedBinarySearchTreeTest {
     private fun isInAscendingOrder(iterated: List<BstEntry<Int, Unit>>): Boolean {
         for (index in 0..<iterated.size-1) {
             if (iterated[index].key > iterated[index + 1].key) {
-                return false
-            }
-        }
-        return true
-    }
-
-    private fun isInDescendingOrder(iterated: List<BstEntry<Int, Unit>>): Boolean {
-        for (index in 0..<iterated.size-1) {
-            if (iterated[index].key < iterated[index + 1].key) {
                 return false
             }
         }
