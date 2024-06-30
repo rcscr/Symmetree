@@ -3,7 +3,7 @@ package com.rcs.bst
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BstUtilsTest {
+class TreeUtilsTest {
 
     @Test
     fun `test predecessor with no right subtree`() {
@@ -11,7 +11,7 @@ class BstUtilsTest {
         val bst = commonTree()
 
         // Act
-        val predecessor = BstUtils.predecessor(bst.root!!.left!!)
+        val predecessor = TreeUtils.predecessor(bst.root!!.left!!)
 
         // Assert
         assertThat(predecessor!!.key).isEqualTo(4)
@@ -23,7 +23,7 @@ class BstUtilsTest {
         val bst = commonTree()
 
         // Act
-        val successor = BstUtils.successor(bst.root!!.right!!)
+        val successor = TreeUtils.successor(bst.root!!.right!!)
 
         // Assert
         assertThat(successor!!.key).isEqualTo(16)
@@ -35,7 +35,7 @@ class BstUtilsTest {
         val bst = commonTree()
 
         // Act
-        val predecessor = BstUtils.predecessor(bst.root!!)
+        val predecessor = TreeUtils.predecessor(bst.root!!)
 
         // Assert
         assertThat(predecessor!!.key).isEqualTo(7)
@@ -47,7 +47,7 @@ class BstUtilsTest {
         val bst = commonTree()
 
         // Act
-        val successor = BstUtils.successor(bst.root!!)
+        val successor = TreeUtils.successor(bst.root!!)
 
         // Assert
         assertThat(successor!!.key).isEqualTo(13)
@@ -59,7 +59,7 @@ class BstUtilsTest {
         val bst = commonTree()
 
         // Act
-        val leftmost = BstUtils.leftMost(bst.root)
+        val leftmost = TreeUtils.leftMost(bst.root)
 
         // Assert
         assertThat(leftmost!!.key).isEqualTo(3)
@@ -71,7 +71,7 @@ class BstUtilsTest {
         val bst = commonTree()
 
         // Act
-        val leftmost = BstUtils.leftMost(bst.root!!.left!!.right)
+        val leftmost = TreeUtils.leftMost(bst.root!!.left!!.right)
 
         // Assert
         assertThat(leftmost!!.key).isEqualTo(7)
@@ -84,7 +84,7 @@ class BstUtilsTest {
         val bst = commonTree()
 
         // Act
-        val rightMost = BstUtils.rightMost(bst.root)
+        val rightMost = TreeUtils.rightMost(bst.root)
 
         // Assert
         assertThat(rightMost!!.key).isEqualTo(17)
@@ -96,7 +96,7 @@ class BstUtilsTest {
         val bst = commonTree()
 
         // Act
-        val rightMost = BstUtils.leftMost(bst.root!!.right!!.left)
+        val rightMost = TreeUtils.leftMost(bst.root!!.right!!.left)
 
         // Assert
         assertThat(rightMost!!.key).isEqualTo(13)
@@ -108,7 +108,7 @@ class BstUtilsTest {
         val bst = commonTree()
 
         // Act
-        val leftmost = BstUtils.findStart(4, bst.root)
+        val leftmost = TreeUtils.findStart(4, bst.root)
 
         // Assert
         assertThat(leftmost!!.key).isEqualTo(4)
@@ -120,7 +120,7 @@ class BstUtilsTest {
         val bst = commonTree()
 
         // Act
-        val leftmost = BstUtils.findStart(14, bst.root)
+        val leftmost = TreeUtils.findStart(14, bst.root)
 
         // Assert
         assertThat(leftmost!!.key).isEqualTo(15)
@@ -132,7 +132,7 @@ class BstUtilsTest {
         val bst = commonTree()
 
         // Act
-        val leftmost = BstUtils.findStart(14, bst.root)
+        val leftmost = TreeUtils.findStart(14, bst.root)
 
         // Assert
         assertThat(leftmost!!.key).isEqualTo(15)
@@ -144,7 +144,7 @@ class BstUtilsTest {
         val bst = commonTree()
 
         // Act
-        val leftmost = BstUtils.findStart(6, bst.root)
+        val leftmost = TreeUtils.findStart(6, bst.root)
 
         // Assert
         assertThat(leftmost!!.key).isEqualTo(7)
@@ -158,7 +158,7 @@ class BstUtilsTest {
         val replacement = bst.findRecursively(3, bst.root)!!
 
         // Act
-        BstUtils.replace(node, replacement)
+        TreeUtils.replace(node, replacement)
 
         // Assert
         assertThat(bst.root!!.left!!.key).isEqualTo(3)
@@ -175,7 +175,7 @@ class BstUtilsTest {
         val replacement = bst.findRecursively(15, bst.root)!!
 
         // Act
-        BstUtils.replace(node, replacement)
+        TreeUtils.replace(node, replacement)
 
         // Assert
         assertThat(bst.root!!.left!!.key).isEqualTo(15)
@@ -186,8 +186,8 @@ class BstUtilsTest {
         assertThat(bst.root!!.right!!.right!!.key).isEqualTo(16)
     }
 
-    private fun commonTree(): BalancedBinarySearchTree<Int, Unit> {
-        val bst = BalancedBinarySearchTree<Int, Unit>()
+    private fun commonTree(): AvlTree<Int, Unit> {
+        val bst = AvlTree<Int, Unit>()
 
         //        10
         //       /  \

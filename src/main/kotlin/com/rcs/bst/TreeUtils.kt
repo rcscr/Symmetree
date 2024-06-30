@@ -1,8 +1,8 @@
 package com.rcs.bst
 
-import org.example.com.rcs.bst.BstNode
+import org.example.com.rcs.bst.TreeNode
 
-class BstUtils {
+class TreeUtils {
 
     companion object {
 
@@ -10,7 +10,7 @@ class BstUtils {
         const val EQUAL = 0
         const val GREATER = 1
 
-        fun <K, V> leftMost(node: BstNode<K, V>?): BstNode<K, V>? {
+        fun <K, V> leftMost(node: TreeNode<K, V>?): TreeNode<K, V>? {
             var leftMost = node
             while (leftMost?.left != null) {
                 leftMost = leftMost.left!!
@@ -18,7 +18,7 @@ class BstUtils {
             return leftMost
         }
 
-        fun <K, V> rightMost(node: BstNode<K, V>?): BstNode<K, V>? {
+        fun <K, V> rightMost(node: TreeNode<K, V>?): TreeNode<K, V>? {
             var rightMost = node
             while (rightMost?.right != null) {
                 rightMost = rightMost.right!!
@@ -26,15 +26,15 @@ class BstUtils {
             return rightMost
         }
 
-        fun <K, V> predecessor(node: BstNode<K, V>): BstNode<K, V>? {
+        fun <K, V> predecessor(node: TreeNode<K, V>): TreeNode<K, V>? {
             return rightMost(node.left)
         }
 
-        fun <K, V> successor(node: BstNode<K, V>): BstNode<K, V>? {
+        fun <K, V> successor(node: TreeNode<K, V>): TreeNode<K, V>? {
             return leftMost(node.right)
         }
 
-        fun <K: Comparable<K>, V> findStart(startInclusive: K, node: BstNode<K, V>?): BstNode<K, V>? {
+        fun <K: Comparable<K>, V> findStart(startInclusive: K, node: TreeNode<K, V>?): TreeNode<K, V>? {
             return node?.let {
                 when (startInclusive.compareTo(it.key)) {
                     LESS -> {
@@ -57,7 +57,7 @@ class BstUtils {
             }
         }
 
-        fun <K, V> replace(node: BstNode<K, V>, replacement: BstNode<K, V>) {
+        fun <K, V> replace(node: TreeNode<K, V>, replacement: TreeNode<K, V>) {
             node.key = replacement.key
             node.value = replacement.value
             if (replacement.isLeaf()) {

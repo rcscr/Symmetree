@@ -2,12 +2,12 @@ package org.example.com.rcs.bst
 
 import kotlin.math.max
 
-data class BstNode<K, V>(
+data class TreeNode<K, V>(
     var key: K,
     var value: V,
-    var left: BstNode<K, V>?,
-    var right: BstNode<K, V>?,
-    var parent: BstNode<K, V>?
+    var left: TreeNode<K, V>?,
+    var right: TreeNode<K, V>?,
+    var parent: TreeNode<K, V>?
 ) {
 
     fun isRoot(): Boolean {

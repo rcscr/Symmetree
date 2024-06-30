@@ -9,12 +9,12 @@ import kotlin.math.floor
 import kotlin.math.log2
 import kotlin.random.Random
 
-class BalancedBinarySearchTreeTest {
+class AvlTreeTest {
 
     @Test
     fun `test simple update`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, String>()
+        val bst = AvlTree<Int, String>()
         bst.add(0, "zero")
         bst.add(-1, "minus one")
         bst.add(1, "one")
@@ -51,7 +51,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test remove root without children`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, String>()
+        val bst = AvlTree<Int, String>()
         bst.add(0, "zero")
 
         // Act
@@ -67,7 +67,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test remove left leaf`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, String>()
+        val bst = AvlTree<Int, String>()
         bst.add(0, "zero")
         bst.add(-1, "minus one")
         bst.add(1, "one")
@@ -87,7 +87,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test remove right leaf`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, String>()
+        val bst = AvlTree<Int, String>()
         bst.add(0, "zero")
         bst.add(-1, "minus one")
         bst.add(1, "one")
@@ -107,7 +107,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test remove leaf with left node`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, String>()
+        val bst = AvlTree<Int, String>()
         bst.add(0, "zero")
         bst.add(-1, "minus one")
         bst.add(1, "one")
@@ -128,7 +128,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test remove leaf with right node`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, String>()
+        val bst = AvlTree<Int, String>()
         bst.add(0, "zero")
         bst.add(-1, "minus one")
         bst.add(1, "one")
@@ -149,7 +149,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test get recursive`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, String>()
+        val bst = AvlTree<Int, String>()
         bst.add(0, "zero")
         bst.add(-1, "minus one")
         bst.add(1, "one")
@@ -164,7 +164,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test add left-skewed balances`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, String>()
+        val bst = AvlTree<Int, String>()
 
         // Act
         bst.add(0, "zero")
@@ -192,7 +192,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test add right-skewed balances`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, String>()
+        val bst = AvlTree<Int, String>()
 
         // Act
         bst.add(0, "zero")
@@ -220,7 +220,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test left-right rotation`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, String>()
+        val bst = AvlTree<Int, String>()
 
         // Act
         bst.add(30, "thirty")
@@ -248,7 +248,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test right-left rotation`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, String>()
+        val bst = AvlTree<Int, String>()
 
         // Act
         bst.add(30, "thirty")
@@ -276,13 +276,13 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test default (InOrder) iterator`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, Unit>()
+        val bst = AvlTree<Int, Unit>()
 
         val values = (0..<1_000).map { Random.nextInt() }
         values.forEach { bst.add(it, Unit) }
 
         // Act
-        val iterated = mutableListOf<BstEntry<Int, Unit>>()
+        val iterated = mutableListOf<TreeEntry<Int, Unit>>()
         for (entry in bst) {
             iterated.add(entry)
         }
@@ -294,13 +294,13 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test ReverseOrder iterator`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, Unit>()
+        val bst = AvlTree<Int, Unit>()
 
         val values = (0..<1_000).map { Random.nextInt() }
         values.forEach { bst.add(it, Unit) }
 
         // Act
-        val iterated = mutableListOf<BstEntry<Int, Unit>>()
+        val iterated = mutableListOf<TreeEntry<Int, Unit>>()
         for (entry in bst.reverseOrderIterator()) {
             iterated.add(entry)
         }
@@ -315,7 +315,7 @@ class BalancedBinarySearchTreeTest {
         val bst = commonTree()
 
         // Act
-        val iterated = mutableListOf<BstEntry<Int, Unit>>()
+        val iterated = mutableListOf<TreeEntry<Int, Unit>>()
         for (entry in bst.preOrderIterator()) {
             iterated.add(entry)
         }
@@ -330,7 +330,7 @@ class BalancedBinarySearchTreeTest {
         val bst = commonTree()
 
         // Act
-        val iterated = mutableListOf<BstEntry<Int, Unit>>()
+        val iterated = mutableListOf<TreeEntry<Int, Unit>>()
         for (entry in bst.postOrderIterator()) {
             iterated.add(entry)
         }
@@ -342,7 +342,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test default (InOrder) iterator - ConcurrentModificationException`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, Unit>()
+        val bst = AvlTree<Int, Unit>()
 
         val values = (0..<1_000).map { Random.nextInt() }
         values.forEach { bst.add(it, Unit) }
@@ -358,7 +358,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test ReverseOrder iterator - ConcurrentModificationException`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, Unit>()
+        val bst = AvlTree<Int, Unit>()
 
         val values = (0..<1_000).map { Random.nextInt() }
         values.forEach { bst.add(it, Unit) }
@@ -374,7 +374,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test PostOrder iterator - ConcurrentModificationException`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, Unit>()
+        val bst = AvlTree<Int, Unit>()
 
         val values = (0..<1_000).map { Random.nextInt() }
         values.forEach { bst.add(it, Unit) }
@@ -390,7 +390,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test PreOrder iterator - ConcurrentModificationException`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, Unit>()
+        val bst = AvlTree<Int, Unit>()
 
         val values = (0..<1_000).map { Random.nextInt() }
         values.forEach { bst.add(it, Unit) }
@@ -418,7 +418,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `stress test balancing maintains correct height`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, Unit>()
+        val bst = AvlTree<Int, Unit>()
 
         val values = (0..<10_000).map { Random.nextInt() }
 
@@ -438,7 +438,7 @@ class BalancedBinarySearchTreeTest {
     @Test
     fun `test concurrent adds and removals`() {
         // Arrange
-        val bst = BalancedBinarySearchTree<Int, Unit>()
+        val bst = AvlTree<Int, Unit>()
 
         val values = (0..<10_000).map { Random.nextInt(Integer.MIN_VALUE, -1) }
 
@@ -465,7 +465,7 @@ class BalancedBinarySearchTreeTest {
 
         val heightAgain = bst.height
 
-        val remaining = mutableListOf<BstEntry<Int, Unit>>()
+        val remaining = mutableListOf<TreeEntry<Int, Unit>>()
         for (entry in bst) {
             remaining.add(entry)
         }
@@ -487,7 +487,7 @@ class BalancedBinarySearchTreeTest {
         return floor(1.44 * log2(n + 2.0)-0.328).toInt()
     }
 
-    private fun isInAscendingOrder(iterated: List<BstEntry<Int, Unit>>): Boolean {
+    private fun isInAscendingOrder(iterated: List<TreeEntry<Int, Unit>>): Boolean {
         for (index in 0..<iterated.size-1) {
             if (iterated[index].key > iterated[index + 1].key) {
                 return false
@@ -496,8 +496,8 @@ class BalancedBinarySearchTreeTest {
         return true
     }
 
-    private fun commonTree(): BalancedBinarySearchTree<Int, Unit> {
-        val bst = BalancedBinarySearchTree<Int, Unit>()
+    private fun commonTree(): AvlTree<Int, Unit> {
+        val bst = AvlTree<Int, Unit>()
 
         //        10
         //       /  \
