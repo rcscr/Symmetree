@@ -154,8 +154,8 @@ class TreeUtilsTest {
     fun `test replace with leaf node`() {
         // Arrange
         val bst = commonTree()
-        val node = bst.findRecursively(5, bst.root)!!
-        val replacement = bst.findRecursively(3, bst.root)!!
+        val node = bst.find(5, bst.root)!!
+        val replacement = bst.find(3, bst.root)!!
 
         // Act
         TreeUtils.replace(node, replacement)
@@ -171,8 +171,8 @@ class TreeUtilsTest {
     fun `test replace with non-leaf node`() {
         // Arrange
         val bst = commonTree()
-        val node = bst.findRecursively(5, bst.root)!!
-        val replacement = bst.findRecursively(15, bst.root)!!
+        val node = bst.find(5, bst.root)!!
+        val replacement = bst.find(15, bst.root)!!
 
         // Act
         TreeUtils.replace(node, replacement)

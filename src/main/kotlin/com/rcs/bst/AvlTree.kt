@@ -23,7 +23,7 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
     }
 
     fun get(key: K): V? {
-        return findRecursively(key, root)?.value
+        return find(key, root)?.value
     }
 
     fun rangeQuery(fromInclusive: K, toExclusive: K): List<TreeEntry<K, V>> {
@@ -64,7 +64,7 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
             root = TreeNode(key, value, null, null, null)
             return null
         } else {
-            val newInsertAndPreviousValue = insertRecursively(key, value, root!!)
+            val newInsertAndPreviousValue = insert(key, value, root!!)
             root = rebalance(newInsertAndPreviousValue.inserted)
             return newInsertAndPreviousValue.previousValue
         }
@@ -83,7 +83,7 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
         }
     }
 
-    private fun insertRecursively(key: K, value: V, node: TreeNode<K, V>): NewInsertAndPreviousValue<K, V> {
+    private fun insert(key: K, value: V, node: TreeNode<K, V>): NewInsertAndPreviousValue<K, V> {
         return when (key.compareTo(node.key)) {
             LESS -> when (node.left) {
                 null -> {
@@ -91,7 +91,7 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
                     NewInsertAndPreviousValue(node.left!!, null)
                 }
                 else ->
-                    insertRecursively(key, value, node.left!!)
+                    insert(key, value, node.left!!)
             }
             EQUAL -> {
                 val previousValue = node.value
@@ -104,18 +104,18 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
                     NewInsertAndPreviousValue(node.right!!, null)
                 }
                 else ->
-                    insertRecursively(key, value, node.right!!)
+                    insert(key, value, node.right!!)
             }
             else -> throw AssertionError()
         }
     }
 
-    internal fun findRecursively(key: K, node: TreeNode<K, V>?): TreeNode<K, V>? {
+    internal fun find(key: K, node: TreeNode<K, V>?): TreeNode<K, V>? {
         return node?.let {
             when (key.compareTo(it.key)) {
-                LESS -> findRecursively(key, it.left)
+                LESS -> find(key, it.left)
                 EQUAL -> it
-                GREATER -> findRecursively(key, it.right)
+                GREATER -> find(key, it.right)
                 else -> throw AssertionError()
             }
         }
