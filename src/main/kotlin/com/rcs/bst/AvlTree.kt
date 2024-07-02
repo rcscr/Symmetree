@@ -86,7 +86,8 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
     private fun insert(key: K, value: V, node: TreeNode<K, V>): NewInsertAndPreviousValue<K, V> {
         return when (key.compareTo(node.key)) {
             LESS -> when (node.left) {
-                null -> NewInsertAndPreviousValue(TreeNode(key, value, null, null, node).also { node.left = it }, null)
+                null -> NewInsertAndPreviousValue(TreeNode(key, value, null, null, node), null)
+                    .also { node.left = it.inserted }
                 else -> insert(key, value, node.left!!)
             }
             EQUAL -> {
@@ -95,7 +96,8 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
                 NewInsertAndPreviousValue(node, previousValue)
             }
             GREATER -> when (node.right) {
-                null -> NewInsertAndPreviousValue(TreeNode(key, value, null, null, node).also { node.right = it }, null)
+                null -> NewInsertAndPreviousValue(TreeNode(key, value, null, null, node), null)
+                    .also { node.right = it.inserted }
                 else -> insert(key, value, node.right!!)
             }
             else -> throw AssertionError()
