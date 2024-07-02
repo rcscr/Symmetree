@@ -62,9 +62,9 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
             root = TreeNode(key, value, null, null, null)
             return null
         } else {
-            val newRootAndPreviousValue = insert(key, value, root!!)
-            root = newRootAndPreviousValue.root
-            return newRootAndPreviousValue.previousValue
+            val newInsertAndPreviousValue = insertRecursively(key, value, root!!)
+            root = rebalance(newInsertAndPreviousValue.inserted)
+            return newInsertAndPreviousValue.previousValue
         }
     }
 
@@ -79,14 +79,6 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
             root = it.root
             it.previousValue
         }
-    }
-
-    private fun insert(key: K, value: V, node: TreeNode<K, V>): NewRootAndPreviousValue<K, V> {
-        val newInsertAndPreviousValue = insertRecursively(key, value, node)
-        return NewRootAndPreviousValue(
-            rebalance(newInsertAndPreviousValue.inserted),
-            newInsertAndPreviousValue.previousValue
-        )
     }
 
     private fun insertRecursively(key: K, value: V, node: TreeNode<K, V>): NewInsertAndPreviousValue<K, V> {
