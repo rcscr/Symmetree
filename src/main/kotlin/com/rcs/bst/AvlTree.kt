@@ -5,6 +5,8 @@ import com.rcs.bst.TreeUtils.Companion.GREATER
 import com.rcs.bst.TreeUtils.Companion.LESS
 import com.rcs.bst.TreeUtils.Companion.predecessor
 import com.rcs.bst.TreeUtils.Companion.replace
+import com.rcs.bst.TreeUtils.Companion.rotateLeft
+import com.rcs.bst.TreeUtils.Companion.rotateRight
 import com.rcs.bst.TreeUtils.Companion.successor
 import org.example.com.rcs.bst.TreeNode
 
@@ -198,56 +200,6 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
             else ->
                 node
         }
-    }
-
-    private fun rotateRight(node: TreeNode<K, V>): TreeNode<K, V> {
-        // new root
-        val leftChild = node.left!!
-
-        node.left = leftChild.right
-        if (leftChild.right != null) {
-            leftChild.right!!.parent = node
-        }
-
-        leftChild.right = node
-        leftChild.parent = node.parent
-
-        if (node.parent != null) {
-            if (node.parent!!.left == node) {
-                node.parent!!.left = leftChild
-            } else {
-                node.parent!!.right = leftChild
-            }
-        }
-
-        node.parent = leftChild
-
-        return leftChild
-    }
-
-    private fun rotateLeft(node: TreeNode<K, V>): TreeNode<K, V> {
-        // new root
-        val rightChild = node.right!!
-
-        node.right = rightChild.left
-        if (rightChild.left != null) {
-            rightChild.left!!.parent = node
-        }
-
-        rightChild.left = node
-        rightChild.parent = node.parent
-
-        if (node.parent != null) {
-            if (node.parent!!.left == node) {
-                node.parent!!.left = rightChild
-            } else {
-                node.parent!!.right = rightChild
-            }
-        }
-
-        node.parent = rightChild
-
-        return rightChild
     }
 
     private data class NewRootAndPreviousValue<K, V>(
