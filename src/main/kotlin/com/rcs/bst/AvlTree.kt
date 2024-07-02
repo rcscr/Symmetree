@@ -86,12 +86,8 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
     private fun insert(key: K, value: V, node: TreeNode<K, V>): NewInsertAndPreviousValue<K, V> {
         return when (key.compareTo(node.key)) {
             LESS -> when (node.left) {
-                null -> {
-                    node.left = TreeNode(key, value, null, null, node)
-                    NewInsertAndPreviousValue(node.left!!, null)
-                }
-                else ->
-                    insert(key, value, node.left!!)
+                null -> NewInsertAndPreviousValue(TreeNode(key, value, null, null, node).also { node.left = it }, null)
+                else -> insert(key, value, node.left!!)
             }
             EQUAL -> {
                 val previousValue = node.value
@@ -99,12 +95,8 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
                 NewInsertAndPreviousValue(node, previousValue)
             }
             GREATER -> when (node.right) {
-                null -> {
-                    node.right = TreeNode(key, value, null, null, node)
-                    NewInsertAndPreviousValue(node.right!!, null)
-                }
-                else ->
-                    insert(key, value, node.right!!)
+                null -> NewInsertAndPreviousValue(TreeNode(key, value, null, null, node).also { node.right = it }, null)
+                else -> insert(key, value, node.right!!)
             }
             else -> throw AssertionError()
         }
@@ -125,10 +117,7 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
         return node?.let {
             when (key.compareTo(it.key)) {
                 LESS -> remove(key, it.left)
-                EQUAL -> NewRootAndPreviousValue(
-                    unlink(it)?.let { unlinked -> rebalance(unlinked) },
-                    it.value
-                )
+                EQUAL -> NewRootAndPreviousValue(unlink(it)?.let { unlinked -> rebalance(unlinked) }, it.value)
                 GREATER -> remove(key, it.right)
                 else -> throw AssertionError()
             }
