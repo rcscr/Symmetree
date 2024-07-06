@@ -78,8 +78,8 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
         modCount++
 
         return remove(key, root)?.let {
-            root = it.root
-            it.previousValue
+            root = rebalance(it)
+            it.value
         }
     }
 
@@ -115,11 +115,11 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
         }
     }
 
-    private fun remove(key: K, node: TreeNode<K, V>?): NewRootAndPreviousValue<K, V>? {
+    private fun remove(key: K, node: TreeNode<K, V>?): TreeNode<K, V>? {
         return node?.let {
             when (key.compareTo(it.key)) {
                 LESS -> remove(key, it.left)
-                EQUAL -> NewRootAndPreviousValue(unlink(it)?.let { unlinked -> rebalance(unlinked) }, it.value)
+                EQUAL -> unlink(it)
                 GREATER -> remove(key, it.right)
                 else -> throw AssertionError()
             }
@@ -192,11 +192,6 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
                 node
         }
     }
-
-    private data class NewRootAndPreviousValue<K, V>(
-        val root: TreeNode<K, V>?,
-        val previousValue: V?
-    )
 
     private data class NewInsertAndPreviousValue<K, V>(
         val inserted: TreeNode<K, V>,
