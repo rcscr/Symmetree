@@ -183,7 +183,7 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
                 rebalance(rotateRight(node))
             }
 
-            // Subtree is balanced; call `rebalance` recursively up to the root
+            // Subtree is balanced - call `rebalance` recursively up to the root
             node.parent != null ->
                 rebalance(node.parent!!)
 
