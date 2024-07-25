@@ -82,6 +82,19 @@ class AvlTreeTest {
     }
 
     @Test
+    fun `test remove non-existent`() {
+        // Arrange
+        val bst = commonTree()
+
+        // Act
+        val removed = bst.remove(-1)
+
+        // Assert
+        assertThat(removed).isNull()
+        assertThat(bst.height).isEqualTo(4)
+    }
+
+    @Test
     fun `test remove root with children`() {
         // Arrange
         val bst = commonTree()

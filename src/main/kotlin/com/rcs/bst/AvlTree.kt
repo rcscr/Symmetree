@@ -105,8 +105,8 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
     fun remove(key: K): V? {
         modCount++
 
-        return remove(key, root)?.let {
-            root = rebalance(it)
+        return find(key, root)?.let {
+            root = unlink(it)?.let { unlinked -> rebalance(unlinked) }
             it.value
         }
     }
@@ -138,17 +138,6 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
                 LESS -> find(key, it.left)
                 EQUAL -> it
                 GREATER -> find(key, it.right)
-                else -> throw AssertionError()
-            }
-        }
-    }
-
-    private fun remove(key: K, node: TreeNode<K, V>?): TreeNode<K, V>? {
-        return node?.let {
-            when (key.compareTo(it.key)) {
-                LESS -> remove(key, it.left)
-                EQUAL -> unlink(it)
-                GREATER -> remove(key, it.right)
                 else -> throw AssertionError()
             }
         }
