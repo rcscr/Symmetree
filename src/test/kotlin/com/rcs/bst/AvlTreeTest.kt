@@ -12,6 +12,58 @@ import kotlin.random.Random
 class AvlTreeTest {
 
     @Test
+    fun `test getMin`() {
+        // Arrange
+        val bst = commonTree()
+
+        // Act
+        val min = bst.getMin()
+
+        // Assert
+        assertThat(min).isEqualTo(TreeEntry(3, Unit))
+        assertThat(bst.contains(3)).isTrue()
+    }
+
+    @Test
+    fun `test popMin`() {
+        // Arrange
+        val bst = commonTree()
+
+        // Act
+        val min = bst.popMin()
+
+        // Assert
+        assertThat(min).isEqualTo(TreeEntry(3, Unit))
+        assertThat(bst.contains(3)).isFalse()
+    }
+
+    @Test
+    fun `test getMax`() {
+        // Arrange
+        val bst = commonTree()
+
+        // Act
+        val max = bst.getMax()
+
+        // Assert
+        assertThat(max).isEqualTo(TreeEntry(17, Unit))
+        assertThat(bst.contains(17)).isTrue()
+    }
+
+    @Test
+    fun `test popMax`() {
+        // Arrange
+        val bst = commonTree()
+
+        // Act
+        val max = bst.popMax()
+
+        // Assert
+        assertThat(max).isEqualTo(TreeEntry(17, Unit))
+        assertThat(bst.contains(17)).isFalse()
+    }
+
+    @Test
     fun `test simple update`() {
         // Arrange
         val bst = AvlTree<Int, String>()

@@ -3,8 +3,10 @@ package com.rcs.bst
 import com.rcs.bst.TreeUtils.Companion.EQUAL
 import com.rcs.bst.TreeUtils.Companion.GREATER
 import com.rcs.bst.TreeUtils.Companion.LESS
+import com.rcs.bst.TreeUtils.Companion.leftMost
 import com.rcs.bst.TreeUtils.Companion.predecessor
 import com.rcs.bst.TreeUtils.Companion.replace
+import com.rcs.bst.TreeUtils.Companion.rightMost
 import com.rcs.bst.TreeUtils.Companion.rotateLeft
 import com.rcs.bst.TreeUtils.Companion.rotateRight
 import com.rcs.bst.TreeUtils.Companion.successor
@@ -32,6 +34,32 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
             .asSequence()
             .takeWhile { it.key < toExclusive }
             .toList()
+    }
+
+    fun getMin(): TreeEntry<K, V>? {
+        return leftMost(root)?.let {
+            TreeEntry(it.key, it.value)
+        }
+    }
+
+    fun getMax(): TreeEntry<K, V>? {
+        return rightMost(root)?.let {
+            TreeEntry(it.key, it.value)
+        }
+    }
+
+    fun popMin(): TreeEntry<K, V>? {
+        return leftMost(root)?.let {
+            root = unlink(it)?.let { unlinked -> rebalance(unlinked) }
+            TreeEntry(it.key, it.value)
+        }
+    }
+
+    fun popMax(): TreeEntry<K, V>? {
+        return rightMost(root)?.let {
+            root = unlink(it)?.let { unlinked -> rebalance(unlinked) }
+            TreeEntry(it.key, it.value)
+        }
     }
 
     /**
