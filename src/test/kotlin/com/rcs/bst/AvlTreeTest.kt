@@ -543,9 +543,9 @@ class AvlTreeTest {
         return floor(1.44 * log2(n + 2.0)-0.328).toInt()
     }
 
-    private fun isInAscendingOrder(iterated: List<TreeEntry<Int, Unit>>): Boolean {
-        for (index in 0..<iterated.size-1) {
-            if (iterated[index].key > iterated[index + 1].key) {
+    private fun isInAscendingOrder(entries: List<TreeEntry<Int, Unit>>): Boolean {
+        for (index in 0..<entries.size-1) {
+            if (entries[index].key > entries[index + 1].key) {
                 return false
             }
         }
