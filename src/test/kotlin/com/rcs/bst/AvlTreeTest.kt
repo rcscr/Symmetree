@@ -91,7 +91,10 @@ class AvlTreeTest {
 
         // Assert
         assertThat(removed).isNull()
-        assertThat(bst.height).isEqualTo(4)
+
+        // tree remained unchanged
+        assertThat(bst.iterator().asSequence().toList())
+            .isEqualTo(commonTree().iterator().asSequence().toList())
     }
 
     @Test
