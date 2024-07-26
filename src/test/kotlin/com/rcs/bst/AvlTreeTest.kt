@@ -350,10 +350,7 @@ class AvlTreeTest {
         values.forEach { bst.add(it, Unit) }
 
         // Act
-        val iterated = mutableListOf<TreeEntry<Int, Unit>>()
-        for (entry in bst) {
-            iterated.add(entry)
-        }
+        val iterated = bst.iterator().asSequence().toList()
 
         // Assert
         assertThat(iterated.map { it.key }).isEqualTo(values.sorted().distinct())
@@ -368,10 +365,7 @@ class AvlTreeTest {
         values.forEach { bst.add(it, Unit) }
 
         // Act
-        val iterated = mutableListOf<TreeEntry<Int, Unit>>()
-        for (entry in bst.reverseOrderIterator()) {
-            iterated.add(entry)
-        }
+        val iterated = bst.reverseOrderIterator().asSequence().toList()
 
         // Assert
         assertThat(iterated.map { it.key }).isEqualTo(values.sorted().reversed().distinct())
@@ -383,10 +377,7 @@ class AvlTreeTest {
         val bst = commonTree()
 
         // Act
-        val iterated = mutableListOf<TreeEntry<Int, Unit>>()
-        for (entry in bst.preOrderIterator()) {
-            iterated.add(entry)
-        }
+        val iterated = bst.preOrderIterator().asSequence().toList()
 
         // Assert
         assertThat(iterated.map { it.key }).containsExactly(10, 5, 15, 4, 7, 14, 16, 3, 17)
@@ -398,10 +389,7 @@ class AvlTreeTest {
         val bst = commonTree()
 
         // Act
-        val iterated = mutableListOf<TreeEntry<Int, Unit>>()
-        for (entry in bst.postOrderIterator()) {
-            iterated.add(entry)
-        }
+        val iterated = bst.postOrderIterator().asSequence().toList()
 
         // Assert
         assertThat(iterated.map { it.key }).containsExactly(3, 4, 7, 5, 14, 17, 16, 15, 10)
