@@ -19,15 +19,45 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
     internal var modCount = 0
 
     val height: Int get() = root?.height() ?: 0
-
+    
+    /**
+     * Returns the previous value, if any, associated with this key
+     */
     @Synchronized
-    fun contains(key: K): Boolean {
-        return get(key) != null
+    fun add(key: K, value: V): V? {
+        modCount++
+
+        if (root == null) {
+            root = TreeNode(key, value, null, null, null)
+            return null
+        } else {
+            val newInsertAndPreviousValue = insert(key, value, root!!)
+            root = rebalance(newInsertAndPreviousValue.inserted)
+            return newInsertAndPreviousValue.previousValue
+        }
+    }
+
+    /**
+     * Returns the previous value, if any, associated with this key
+     */
+    @Synchronized
+    fun remove(key: K): V? {
+        modCount++
+
+        return find(key, root)?.let {
+            root = unlink(it)?.let { unlinked -> rebalance(unlinked) }
+            it.value
+        }
     }
 
     @Synchronized
     fun get(key: K): V? {
         return find(key, root)?.value
+    }
+
+    @Synchronized
+    fun contains(key: K): Boolean {
+        return get(key) != null
     }
 
     @Synchronized
@@ -86,36 +116,6 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
 
     fun reverseOrderIterator(): Iterator<TreeEntry<K, V>> {
         return ReverseOrderTreeIterator(this)
-    }
-
-    /**
-     * Returns the previous value, if any, associated with this key
-     */
-    @Synchronized
-    fun add(key: K, value: V): V? {
-        modCount++
-
-        if (root == null) {
-            root = TreeNode(key, value, null, null, null)
-            return null
-        } else {
-            val newInsertAndPreviousValue = insert(key, value, root!!)
-            root = rebalance(newInsertAndPreviousValue.inserted)
-            return newInsertAndPreviousValue.previousValue
-        }
-    }
-
-    /**
-     * Returns the previous value, if any, associated with this key
-     */
-    @Synchronized
-    fun remove(key: K): V? {
-        modCount++
-
-        return find(key, root)?.let {
-            root = unlink(it)?.let { unlinked -> rebalance(unlinked) }
-            it.value
-        }
     }
 
     private fun insert(key: K, value: V, node: TreeNode<K, V>): NewInsertAndPreviousValue<K, V> {
