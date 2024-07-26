@@ -20,14 +20,17 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
 
     val height: Int get() = root?.height() ?: 0
 
+    @Synchronized
     fun contains(key: K): Boolean {
         return get(key) != null
     }
 
+    @Synchronized
     fun get(key: K): V? {
         return find(key, root)?.value
     }
 
+    @Synchronized
     fun rangeQuery(fromInclusive: K, toExclusive: K): List<TreeEntry<K, V>> {
         val start = TreeUtils.findStart(fromInclusive, root)
         return InOrderTreeIterator.fromStart(this, start)
@@ -36,18 +39,21 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
             .toList()
     }
 
+    @Synchronized
     fun getMin(): TreeEntry<K, V>? {
         return leftMost(root)?.let {
             TreeEntry(it.key, it.value)
         }
     }
 
+    @Synchronized
     fun getMax(): TreeEntry<K, V>? {
         return rightMost(root)?.let {
             TreeEntry(it.key, it.value)
         }
     }
 
+    @Synchronized
     fun popMin(): TreeEntry<K, V>? {
         return leftMost(root)?.let {
             root = unlink(it)?.let { unlinked -> rebalance(unlinked) }
@@ -55,6 +61,7 @@ class AvlTree<K, V>: Iterable<TreeEntry<K, V>> where K: Comparable<K> {
         }
     }
 
+    @Synchronized
     fun popMax(): TreeEntry<K, V>? {
         return rightMost(root)?.let {
             root = unlink(it)?.let { unlinked -> rebalance(unlinked) }
